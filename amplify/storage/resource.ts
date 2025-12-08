@@ -1,7 +1,7 @@
 import { defineStorage } from '@aws-amplify/backend';
 
 export const storage = defineStorage({
-  name: 'powersight-storage',
+  name: 'ps-cloud-gen2',
   access: (allow) => ({
     'public/*': [
       allow.guest.to(['read']),

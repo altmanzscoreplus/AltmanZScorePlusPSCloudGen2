@@ -1,6 +1,7 @@
 import { defineAuth } from '@aws-amplify/backend';
 
 export const auth = defineAuth({
+  name: 'ps-cloud-gen2',
   loginWith: {
     email: true,
   },

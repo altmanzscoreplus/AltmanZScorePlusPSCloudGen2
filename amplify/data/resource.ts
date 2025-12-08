@@ -689,6 +689,7 @@ Events: a
 export type Schema = ClientSchema<typeof schema>;
 
 export const data = defineData({
+  name: 'ps-cloud-gen2',
   schema,
   authorizationModes: {
     defaultAuthorizationMode: 'userPool',
