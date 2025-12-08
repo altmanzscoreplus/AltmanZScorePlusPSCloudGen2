@@ -1,0 +1,13 @@
+{
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "connectionTable",
+      "environmentVariableName": "CONNECTION_TABLE"
+    },
+    {
+      "cloudFormationParameterName": "gatewayTable",
+      "environmentVariableName": "GATEWAY_TABLE"
+    }
+  ]
+}

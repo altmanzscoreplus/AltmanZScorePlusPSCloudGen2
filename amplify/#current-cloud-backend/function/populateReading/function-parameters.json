@@ -1,0 +1,13 @@
+{
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "readingTableName",
+      "environmentVariableName": "ReadingTableName"
+    },
+    {
+      "cloudFormationParameterName": "eventTableName",
+      "environmentVariableName": "EventTableName"
+    }
+  ]
+}

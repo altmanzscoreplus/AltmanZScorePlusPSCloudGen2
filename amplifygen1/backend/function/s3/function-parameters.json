@@ -1,0 +1,9 @@
+{
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "awsBucketName",
+      "environmentVariableName": "AWS_BUCKET_NAME"
+    }
+  ]
+}

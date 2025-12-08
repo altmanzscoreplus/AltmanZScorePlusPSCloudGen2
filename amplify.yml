@@ -1,0 +1,34 @@
+version: 1
+applications:
+  - backend:
+      phases:
+        preBuild:
+          commands:
+            - echo "Installing Node 22 dependencies"
+            - nvm install 22
+            - nvm use 22
+            - node --version
+            - npm --version
+            - npm ci
+        build:
+          commands:
+            - echo "Building Amplify Gen 2 Backend"
+            - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - echo "Installing frontend dependencies"
+            - npm ci
+        build:
+          commands:
+            - echo "Building frontend application"
+            - npm run build:frontend
+      artifacts:
+        baseDirectory: dist
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+          - .amplify/**/*

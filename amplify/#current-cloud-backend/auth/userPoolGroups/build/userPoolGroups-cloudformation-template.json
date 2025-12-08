@@ -1,0 +1,429 @@
+{
+  "Description": "Root Stack for AWS Amplify CLI",
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "env": {
+      "Type": "String"
+    },
+    "AuthRoleArn": {
+      "Type": "String"
+    },
+    "UnauthRoleArn": {
+      "Type": "String"
+    },
+    "authpowersight0b720405UserPoolId": {
+      "Type": "String",
+      "Default": "authpowersight0b720405UserPoolId"
+    },
+    "authpowersight0b720405IdentityPoolId": {
+      "Type": "String",
+      "Default": "authpowersight0b720405IdentityPoolId"
+    },
+    "authpowersight0b720405AppClientID": {
+      "Type": "String",
+      "Default": "authpowersight0b720405AppClientID"
+    },
+    "authpowersight0b720405AppClientIDWeb": {
+      "Type": "String",
+      "Default": "authpowersight0b720405AppClientIDWeb"
+    }
+  },
+  "Conditions": {
+    "ShouldNotCreateEnvResources": {
+      "Fn::Equals": [
+        {
+          "Ref": "env"
+        },
+        "NONE"
+      ]
+    }
+  },
+  "Resources": {
+    "AdminGroup": {
+      "Type": "AWS::Cognito::UserPoolGroup",
+      "Properties": {
+        "UserPoolId": {
+          "Ref": "authpowersight0b720405UserPoolId"
+        },
+        "Description": "override success",
+        "GroupName": "Admin",
+        "Precedence": 1,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "AdminGroupRole",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "AdminGroupRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "cognito-identity.amazonaws.com"
+              },
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": {
+                "StringEquals": {
+                  "cognito-identity.amazonaws.com:aud": {
+                    "Ref": "authpowersight0b720405IdentityPoolId"
+                  }
+                },
+                "ForAnyValue:StringLike": {
+                  "cognito-identity.amazonaws.com:amr": "authenticated"
+                }
+              }
+            }
+          ]
+        },
+        "RoleName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "authpowersight0b720405UserPoolId"
+              },
+              "-AdminGroupRole"
+            ]
+          ]
+        }
+      }
+    },
+    "ClientGroup": {
+      "Type": "AWS::Cognito::UserPoolGroup",
+      "Properties": {
+        "UserPoolId": {
+          "Ref": "authpowersight0b720405UserPoolId"
+        },
+        "Description": "override success",
+        "GroupName": "Client",
+        "Precedence": 2,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "ClientGroupRole",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "ClientGroupRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "cognito-identity.amazonaws.com"
+              },
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": {
+                "StringEquals": {
+                  "cognito-identity.amazonaws.com:aud": {
+                    "Ref": "authpowersight0b720405IdentityPoolId"
+                  }
+                },
+                "ForAnyValue:StringLike": {
+                  "cognito-identity.amazonaws.com:amr": "authenticated"
+                }
+              }
+            }
+          ]
+        },
+        "RoleName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "authpowersight0b720405UserPoolId"
+              },
+              "-ClientGroupRole"
+            ]
+          ]
+        }
+      }
+    },
+    "CustomerGroup": {
+      "Type": "AWS::Cognito::UserPoolGroup",
+      "Properties": {
+        "UserPoolId": {
+          "Ref": "authpowersight0b720405UserPoolId"
+        },
+        "Description": "override success",
+        "GroupName": "Customer",
+        "Precedence": 3,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "CustomerGroupRole",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "CustomerGroupRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "cognito-identity.amazonaws.com"
+              },
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": {
+                "StringEquals": {
+                  "cognito-identity.amazonaws.com:aud": {
+                    "Ref": "authpowersight0b720405IdentityPoolId"
+                  }
+                },
+                "ForAnyValue:StringLike": {
+                  "cognito-identity.amazonaws.com:amr": "authenticated"
+                }
+              }
+            }
+          ]
+        },
+        "RoleName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "authpowersight0b720405UserPoolId"
+              },
+              "-CustomerGroupRole"
+            ]
+          ]
+        }
+      }
+    },
+    "AdminMasterGroup": {
+      "Type": "AWS::Cognito::UserPoolGroup",
+      "Properties": {
+        "UserPoolId": {
+          "Ref": "authpowersight0b720405UserPoolId"
+        },
+        "Description": "override success",
+        "GroupName": "AdminMaster",
+        "Precedence": 4,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "AdminMasterGroupRole",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "AdminMasterGroupRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "cognito-identity.amazonaws.com"
+              },
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": {
+                "StringEquals": {
+                  "cognito-identity.amazonaws.com:aud": {
+                    "Ref": "authpowersight0b720405IdentityPoolId"
+                  }
+                },
+                "ForAnyValue:StringLike": {
+                  "cognito-identity.amazonaws.com:amr": "authenticated"
+                }
+              }
+            }
+          ]
+        },
+        "RoleName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "authpowersight0b720405UserPoolId"
+              },
+              "-AdminMasterGroupRole"
+            ]
+          ]
+        }
+      }
+    },
+    "ClientMasterGroup": {
+      "Type": "AWS::Cognito::UserPoolGroup",
+      "Properties": {
+        "UserPoolId": {
+          "Ref": "authpowersight0b720405UserPoolId"
+        },
+        "Description": "override success",
+        "GroupName": "ClientMaster",
+        "Precedence": 5,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "ClientMasterGroupRole",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "ClientMasterGroupRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "cognito-identity.amazonaws.com"
+              },
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": {
+                "StringEquals": {
+                  "cognito-identity.amazonaws.com:aud": {
+                    "Ref": "authpowersight0b720405IdentityPoolId"
+                  }
+                },
+                "ForAnyValue:StringLike": {
+                  "cognito-identity.amazonaws.com:amr": "authenticated"
+                }
+              }
+            }
+          ]
+        },
+        "RoleName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "authpowersight0b720405UserPoolId"
+              },
+              "-ClientMasterGroupRole"
+            ]
+          ]
+        }
+      }
+    },
+    "CustomerMasterGroup": {
+      "Type": "AWS::Cognito::UserPoolGroup",
+      "Properties": {
+        "UserPoolId": {
+          "Ref": "authpowersight0b720405UserPoolId"
+        },
+        "Description": "override success",
+        "GroupName": "CustomerMaster",
+        "Precedence": 6,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "CustomerMasterGroupRole",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "CustomerMasterGroupRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "cognito-identity.amazonaws.com"
+              },
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": {
+                "StringEquals": {
+                  "cognito-identity.amazonaws.com:aud": {
+                    "Ref": "authpowersight0b720405IdentityPoolId"
+                  }
+                },
+                "ForAnyValue:StringLike": {
+                  "cognito-identity.amazonaws.com:amr": "authenticated"
+                }
+              }
+            }
+          ]
+        },
+        "RoleName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "authpowersight0b720405UserPoolId"
+              },
+              "-CustomerMasterGroupRole"
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "AdminGroupRole": {
+      "Value": {
+        "Fn::GetAtt": [
+          "AdminGroupRole",
+          "Arn"
+        ]
+      }
+    },
+    "ClientGroupRole": {
+      "Value": {
+        "Fn::GetAtt": [
+          "ClientGroupRole",
+          "Arn"
+        ]
+      }
+    },
+    "CustomerGroupRole": {
+      "Value": {
+        "Fn::GetAtt": [
+          "CustomerGroupRole",
+          "Arn"
+        ]
+      }
+    },
+    "AdminMasterGroupRole": {
+      "Value": {
+        "Fn::GetAtt": [
+          "AdminMasterGroupRole",
+          "Arn"
+        ]
+      }
+    },
+    "ClientMasterGroupRole": {
+      "Value": {
+        "Fn::GetAtt": [
+          "ClientMasterGroupRole",
+          "Arn"
+        ]
+      }
+    },
+    "CustomerMasterGroupRole": {
+      "Value": {
+        "Fn::GetAtt": [
+          "CustomerMasterGroupRole",
+          "Arn"
+        ]
+      }
+    }
+  }
+}

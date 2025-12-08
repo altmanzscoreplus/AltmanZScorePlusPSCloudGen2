@@ -1,0 +1,13 @@
+{
+    "AppSyncApiName": "powersight",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false,
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authpowersight0b720405",
+            "Outputs.UserPoolId"
+        ]
+    },
+    "S3DeploymentBucket": "amplify-powersight-dev-32334-deployment",
+    "S3DeploymentRootKey": "amplify-appsync-files/db1ea50b516e281ff7e761bc749e7c2a988fefb0"
+}

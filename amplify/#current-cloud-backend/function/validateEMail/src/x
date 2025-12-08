@@ -1,0 +1,46 @@
+const express = require('express');
+const cors = require('cors');
+const dns = require('dns').promises;
+
+const app = express();
+const port = 3000;
+
+// Use CORS with default options for all routes
+app.use(cors());
+
+app.use(express.json());
+
+const checkMXRecords = async (domain) => {
+    console.log('Checking MX records for domain:', domain);
+    try {
+        const promise = dns.resolveMx(domain);
+        const timeout = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('DNS query timed out')), 5000) // Set a timeout for DNS queries
+        );
+        const mxRecords = await Promise.race([promise, timeout]);
+        console.log('MX Records:', mxRecords);
+        return { valid: mxRecords.length > 0, error: null };
+    } catch (error) {
+        console.error('DNS error checking MX records:', error);
+        return { valid: false, error: error.message || 'DNS error occurred' };
+    }
+};
+
+const getDomainFromEmail = (email) => email.split('@')[1];
+
+app.post('/validate-email', async (req, res) => {
+    const { email } = req.body;
+    if (!email) {
+        return res.status(400).json({ error: 'Email is required' });
+    }
+
+    const domain = getDomainFromEmail(email);
+    const result = await checkMXRecords(domain);
+    if (result.valid) {
+        res.status(200).json({ message: 'Email domain has valid MX records.' });
+    } else {
+        res.status(400).json({ message: `Email domain does not have valid MX records: ${result.error}` });
+    }
+});
+
+

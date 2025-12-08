@@ -1,0 +1,366 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "{\"createdOn\":\"Linux\",\"createdBy\":\"Amplify\",\"createdWith\":\"12.10.1\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+  "Parameters": {
+    "CloudWatchRule": {
+      "Type": "String",
+      "Default": "NONE",
+      "Description": " Schedule Expression"
+    },
+    "deploymentBucketName": {
+      "Type": "String"
+    },
+    "env": {
+      "Type": "String"
+    },
+    "s3Key": {
+      "Type": "String"
+    },
+    "tableName": {
+      "Type": "String"
+    },
+    "sesRecipientEmail": {
+      "Type": "String"
+    },
+    "dedupTableName": {
+      "Type": "String"
+    },
+    "emailAlertSentTable": {
+      "Type": "String"
+    },
+    "gatewayTable": {
+      "Type": "String"
+    },
+    "analyzerTable": {
+      "Type": "String"
+    },
+    "clientTable": {
+      "Type": "String"
+    },
+    "customerTable": {
+      "Type": "String"
+    },
+    "globalAlarmTable": {
+      "Type": "String"
+    },
+    "gatewayAlarmTable": {
+      "Type": "String"
+    },
+    "analyzerAlarmTable": {
+      "Type": "String"
+    },
+    "customerAlarmTable": {
+      "Type": "String"
+    },
+    "clientAlarmTable": {
+      "Type": "String"
+    },
+    "pinpointAppId": {
+      "Type": "String"
+    }
+  },
+  "Conditions": {
+    "ShouldNotCreateEnvResources": {
+      "Fn::Equals": [
+        {
+          "Ref": "env"
+        },
+        "NONE"
+      ]
+    }
+  },
+  "Resources": {
+    "LambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Metadata": {
+        "aws:asset:path": "./src",
+        "aws:asset:property": "Code"
+      },
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": {
+            "Ref": "s3Key"
+          }
+        },
+        "Handler": "index.handler",
+        "FunctionName": {
+          "Fn::If": [
+            "ShouldNotCreateEnvResources",
+            "sendDisconnectAlarm",
+            {
+              "Fn::Join": [
+                "",
+                [
+                  "sendDisconnectAlarm",
+                  "-",
+                  {
+                    "Ref": "env"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "ENV": {
+              "Ref": "env"
+            },
+            "REGION": {
+              "Ref": "AWS::Region"
+            },
+            "TABLE_NAME": {
+              "Ref": "tableName"
+            },
+            "SES_RECIPIENT_EMAIL": {
+              "Ref": "sesRecipientEmail"
+            },
+            "DEDUP_TABLE_NAME": {
+              "Ref": "dedupTableName"
+            },
+            "EMAIL_ALERT_SENT_TABLE": {
+              "Ref": "emailAlertSentTable"
+            },
+            "GATEWAY_TABLE": {
+              "Ref": "gatewayTable"
+            },
+            "ANALYZER_TABLE": {
+              "Ref": "analyzerTable"
+            },
+            "CLIENT_TABLE": {
+              "Ref": "clientTable"
+            },
+            "CUSTOMER_TABLE": {
+              "Ref": "customerTable"
+            },
+            "GLOBAL_ALARM_TABLE": {
+              "Ref": "globalAlarmTable"
+            },
+            "GATEWAY_ALARM_TABLE": {
+              "Ref": "gatewayAlarmTable"
+            },
+            "ANALYZER_ALARM_TABLE": {
+              "Ref": "analyzerAlarmTable"
+            },
+            "CUSTOMER_ALARM_TABLE": {
+              "Ref": "customerAlarmTable"
+            },
+            "CLIENT_ALARM_TABLE": {
+              "Ref": "clientAlarmTable"
+            },
+            "PINPOINT_APP_ID": {
+              "Ref": "pinpointAppId"
+            }
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs22.x",
+        "Layers": [],
+        "Timeout": 25
+      }
+    },
+    "LambdaExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "RoleName": {
+          "Fn::If": [
+            "ShouldNotCreateEnvResources",
+            "powersightLambdaRole06b8cdb4",
+            {
+              "Fn::Join": [
+                "",
+                [
+                  "powersightLambdaRole06b8cdb4",
+                  "-",
+                  {
+                    "Ref": "env"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "lambdaexecutionpolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "lambda-execution-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Resource": {
+                "Fn::Sub": [
+                  "arn:aws:logs:${region}:${account}:log-group:/aws/lambda/${lambda}:log-stream:*",
+                  {
+                    "region": {
+                      "Ref": "AWS::Region"
+                    },
+                    "account": {
+                      "Ref": "AWS::AccountId"
+                    },
+                    "lambda": {
+                      "Ref": "LambdaFunction"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:GetItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem"
+              ],
+              "Resource": [
+		      {
+                "Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${emailAlertSentTable}"
+              }
+	      ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:DescribeTable"
+              ],
+              "Resource": [
+		{
+                	"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${gatewayTable}"
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${analyzerTable}" 
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${clientTable}"
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${customerTable}"
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${globalAlarmTable}"
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${gatewayAlarmTable}"
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${analyzerAlarmTable}"
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${customerAlarmTable}"
+		},
+		{
+                	"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${gatewayTable}/index/*"
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${analyzerTable}/index/*" 
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${clientTable}/index/*"
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${customerTable}/index/*"
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${globalAlarmTable}/index/*"
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${gatewayAlarmTable}/index/*"
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${analyzerAlarmTable}/index/*"
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${customerAlarmTable}/index/*"
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${clientAlarmTable}/index/*"
+		},
+		{
+			"Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${clientAlarmTable}/index/*"
+		}
+	      ]
+              }
+            }
+          ]
+      }
+    }
+  },
+  "Outputs": {
+    "Name": {
+      "Value": {
+        "Ref": "LambdaFunction"
+      }
+    },
+    "Arn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "LambdaFunction",
+          "Arn"
+        ]
+      }
+    },
+    "Region": {
+      "Value": {
+        "Ref": "AWS::Region"
+      }
+    },
+    "LambdaExecutionRole": {
+      "Value": {
+        "Ref": "LambdaExecutionRole"
+      }
+    },
+    "LambdaExecutionRoleArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "LambdaExecutionRole",
+          "Arn"
+        ]
+      }
+    }
+  }
+}

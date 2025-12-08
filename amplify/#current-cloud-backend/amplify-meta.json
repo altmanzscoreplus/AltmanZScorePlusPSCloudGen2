@@ -1,0 +1,1074 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-powersight-dev-32334-authRole",
+      "UnauthRoleArn": "arn:aws:iam::426841475258:role/amplify-powersight-dev-32334-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::426841475258:role/amplify-powersight-dev-32334-authRole",
+      "Region": "us-west-1",
+      "DeploymentBucketName": "amplify-powersight-dev-32334-deployment",
+      "UnauthRoleName": "amplify-powersight-dev-32334-unauthRole",
+      "StackName": "amplify-powersight-dev-32334",
+      "StackId": "arn:aws:cloudformation:us-west-1:426841475258:stack/amplify-powersight-dev-32334/a0218440-b8d5-11ee-9b93-0211f49e36fd",
+      "AmplifyAppId": "d2ph4z2b0l0dmf",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+    }
+  },
+  "api": {
+    "powersight": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "powersight0b720405"
+        }
+      ],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [],
+          "defaultAuthentication": {
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authpowersight0b720405"
+            }
+          }
+        },
+        "GraphQLAPIIdOutput": "hjeols7wvbf4lbjdxdntgotyvm",
+        "GraphQLAPIEndpointOutput": "https://gc2nu2rsnncm3gsgly5lgb6ir4.appsync-api.us-west-1.amazonaws.com/graphql"
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync",
+      "lastPushTimeStamp": "2025-05-22T18:30:21.029Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "logicalId": "apipowersight"
+      },
+      "lastPushDirHash": "N2BnemPz88BKR8S2Mnht70RrcJQ="
+    },
+    "powersightrestapi": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "batchDeleteAnalyzer",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "powersight0b720405",
+          "attributes": [
+            "UserPoolId"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "userPoolGroups",
+          "attributes": [
+            "AdminGroupRole"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "userPoolGroups",
+          "attributes": [
+            "ClientGroupRole"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "userPoolGroups",
+          "attributes": [
+            "CustomerGroupRole"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "userPoolGroups",
+          "attributes": [
+            "AdminMasterGroupRole"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "batchDeleteCustomer",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "batchDeleteGateway",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "getActiveDeviceRental",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "sendAlarm",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "userPoolGroups",
+          "attributes": [
+            "ClientMasterGroupRole"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "userPoolGroups",
+          "attributes": [
+            "CustomerMasterGroupRole"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "sendEMail",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "updateDevice",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "getAutoIncrementedID",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "getFileNames",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "IoTShadow",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "upgradeFirmware",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "getFirmwareFileNames",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "s3",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ],
+      "lastPushTimeStamp": "2025-05-22T18:30:21.038Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/api/powersightrestapi-cloudformation-template.json",
+        "logicalId": "apipowersightrestapi"
+      },
+      "output": {
+        "ApiName": "powersightrestapi",
+        "RootUrl": "https://860qfshj67.execute-api.us-west-1.amazonaws.com/dev",
+        "ApiId": "860qfshj67"
+      },
+      "lastPushDirHash": "ZzBx7cBncQmAffhQVOjlsQic4Fg="
+    },
+    "AdminQueries": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "authorizationType": "AMAZON_COGNITO_USER_POOLS",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "powersight0b720405",
+          "attributes": [
+            "UserPoolId"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "AdminQueries2855213c",
+          "attributes": [
+            "Arn",
+            "Name"
+          ]
+        }
+      ],
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/api/AdminQueries-cloudformation-template.json",
+        "logicalId": "apiAdminQueries"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.052Z",
+      "output": {
+        "ApiName": "AdminQueries",
+        "RootUrl": "https://6eha5wx5pd.execute-api.us-west-1.amazonaws.com/dev",
+        "ApiId": "6eha5wx5pd"
+      },
+      "lastPushDirHash": "dfyrPw6dmmiTJjzIIjI6hdxB3NE="
+    },
+    "validateEMail": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "validateEMail",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ],
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/api/validateEMail-cloudformation-template.json",
+        "logicalId": "apivalidateEMail"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.059Z",
+      "output": {
+        "ApiName": "validateEMail",
+        "RootUrl": "https://l5sxdebnq3.execute-api.us-west-1.amazonaws.com/dev",
+        "ApiId": "l5sxdebnq3"
+      },
+      "lastPushDirHash": "2whpQfsiFh0ZCalUJFud89IADUw="
+    }
+  },
+  "auth": {
+    "powersight0b720405": {
+      "customAuth": false,
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": []
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "output": {
+        "UserPoolId": "us-west-1_F0uiXhSAc",
+        "AppClientIDWeb": "40l1bq7jp27er8h7sb1l34cl9s",
+        "AppClientID": "7bm2962is9c642ugket5mhhr8b",
+        "IdentityPoolId": "us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e",
+        "UserPoolArn": "arn:aws:cognito-idp:us-west-1:426841475258:userpool/us-west-1_F0uiXhSAc",
+        "IdentityPoolName": "powersight0b720405_identitypool_0b720405__dev",
+        "UserPoolName": "powersight0b720405_userpool_0b720405"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.067Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/auth/powersight0b720405-cloudformation-template.json",
+        "logicalId": "authpowersight0b720405"
+      },
+      "lastPushDirHash": "7HiqiQFcgeJpWJ9jRJDHj6A7zuA="
+    },
+    "userPoolGroups": {
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "powersight0b720405",
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID",
+            "IdentityPoolId"
+          ]
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito-UserPool-Groups",
+      "output": {
+        "ClientGroupRole": "arn:aws:iam::426841475258:role/us-west-1_F0uiXhSAc-ClientGroupRole",
+        "CustomerGroupRole": "arn:aws:iam::426841475258:role/us-west-1_F0uiXhSAc-CustomerGroupRole",
+        "AdminGroupRole": "arn:aws:iam::426841475258:role/us-west-1_F0uiXhSAc-AdminGroupRole",
+        "ClientMasterGroupRole": "arn:aws:iam::426841475258:role/us-west-1_F0uiXhSAc-ClientMasterGroupRole",
+        "AdminMasterGroupRole": "arn:aws:iam::426841475258:role/us-west-1_F0uiXhSAc-AdminMasterGroupRole",
+        "CustomerMasterGroupRole": "arn:aws:iam::426841475258:role/us-west-1_F0uiXhSAc-CustomerMasterGroupRole"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.076Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/auth/userPoolGroups-cloudformation-template.json",
+        "logicalId": "authuserPoolGroups"
+      },
+      "lastPushDirHash": "bNomiYVJu10xkG+uOCo17xPA+R8="
+    }
+  },
+  "function": {
+    "updateDevice": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2024-02-16T21:14:48.970Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-02-16T21:14:57.423Z",
+      "distZipFilename": "updateDevice-2f566a34716a75687965-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/updateDevice-2f566a34716a75687965-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/updateDevice-cloudformation-template.json",
+        "logicalId": "functionupdateDevice"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.083Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRolea521f70b-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:updateDevice-dev",
+        "Name": "updateDevice-dev",
+        "LambdaExecutionRole": "powersightLambdaRolea521f70b-dev"
+      },
+      "lastPushDirHash": "HCvWivBoPpIjQCvdHWOy30E2n5o="
+    },
+    "AdminQueries2855213c": {
+      "service": "Lambda",
+      "providerPlugin": "awscloudformation",
+      "build": true,
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "powersight0b720405",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ],
+      "lastBuildTimeStamp": "2024-06-19T05:30:36.633Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-06-19T05:30:38.566Z",
+      "distZipFilename": "AdminQueries2855213c-32797061515758437930-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/AdminQueries2855213c-32797061515758437930-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/AdminQueries2855213c-cloudformation-template.json",
+        "logicalId": "functionAdminQueries2855213c"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.091Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/AdminQueries2855213cLambdaRole-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:AdminQueries2855213c-dev",
+        "Name": "AdminQueries2855213c-dev",
+        "LambdaExecutionRole": "AdminQueries2855213cLambdaRole-dev"
+      },
+      "lastPushDirHash": "aX9u7wN+8p8c0n9FU3jRf7Dwbbo="
+    },
+    "populateReading": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2024-04-24T21:19:06.968Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-04-24T21:19:18.102Z",
+      "distZipFilename": "populateReading-4c59526d4837456d6432-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/populateReading-4c59526d4837456d6432-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/populateReading-cloudformation-template.json",
+        "logicalId": "functionpopulateReading"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.098Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole150844f0-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:populateReading-dev",
+        "Name": "populateReading-dev",
+        "LambdaExecutionRole": "powersightLambdaRole150844f0-dev"
+      },
+      "lastPushDirHash": "d2b9GZliYr+60agBv+R66/T+Ikg="
+    },
+    "sendAlarm": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2024-09-24T12:20:04.193Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-09-24T12:20:04.237Z",
+      "distZipFilename": "sendAlarm-6f525a612f7349333457-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/sendAlarm-6f525a612f7349333457-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/sendAlarm-cloudformation-template.json",
+        "logicalId": "functionsendAlarm"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.106Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole7c15fb60-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:sendAlarm-dev",
+        "Name": "sendAlarm-dev",
+        "LambdaExecutionRole": "powersightLambdaRole7c15fb60-dev"
+      },
+      "lastPushDirHash": "pKg83j7S3Y6WtjGa370TVlQUyBk="
+    },
+    "batchDeleteCustomer": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2024-08-05T16:29:31.525Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-08-05T16:29:39.488Z",
+      "distZipFilename": "batchDeleteCustomer-4c6b56462b3770376748-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/batchDeleteCustomer-4c6b56462b3770376748-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/batchDeleteCustomer-cloudformation-template.json",
+        "logicalId": "functionbatchDeleteCustomer"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.114Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole9dad41ea-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:batchDeleteCustomer-dev",
+        "Name": "batchDeleteCustomer-dev",
+        "LambdaExecutionRole": "powersightLambdaRole9dad41ea-dev"
+      },
+      "lastPushDirHash": "oyEsiZuCs1mfzCNNq28i/JI22wE="
+    },
+    "getAutoIncrementedID": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [],
+      "lastBuildTimeStamp": "2024-04-19T22:01:15.776Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-04-19T22:01:24.486Z",
+      "distZipFilename": "getAutoIncrementedID-5943574a7a5838794b69-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/getAutoIncrementedID-5943574a7a5838794b69-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/getAutoIncrementedID-cloudformation-template.json",
+        "logicalId": "functiongetAutoIncrementedID"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.121Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole674af5bb-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:getAutoIncrementedID-dev",
+        "Name": "getAutoIncrementedID-dev",
+        "LambdaExecutionRole": "powersightLambdaRole674af5bb-dev"
+      },
+      "lastPushDirHash": "QNXFcd/JCo8dRK4VcMLQFS6YtrA="
+    },
+    "validateEMail": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2024-04-20T18:12:16.095Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-04-20T18:12:20.375Z",
+      "distZipFilename": "validateEMail-785a666c53564262686f-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/validateEMail-785a666c53564262686f-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/validateEMail-cloudformation-template.json",
+        "logicalId": "functionvalidateEMail"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.128Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole5282fdb5-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:validateEMail-dev",
+        "Name": "validateEMail-dev",
+        "LambdaExecutionRole": "powersightLambdaRole5282fdb5-dev"
+      },
+      "lastPushDirHash": "yoGb3fN6Hg9x2t3Cy2JRWQyEoC8="
+    },
+    "batchDeleteGateway": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2024-04-22T15:31:19.375Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-04-22T15:31:29.709Z",
+      "distZipFilename": "batchDeleteGateway-36644d4c546f75797152-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/batchDeleteGateway-36644d4c546f75797152-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/batchDeleteGateway-cloudformation-template.json",
+        "logicalId": "functionbatchDeleteGateway"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.137Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRoleab932dfd-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:batchDeleteGateway-dev",
+        "Name": "batchDeleteGateway-dev",
+        "LambdaExecutionRole": "powersightLambdaRoleab932dfd-dev"
+      },
+      "lastPushDirHash": "WhICO/GyfzTpN8kaM2pvDdNvnJ4="
+    },
+    "batchDeleteAnalyzer": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2024-04-22T15:17:29.512Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-04-22T15:17:38.802Z",
+      "distZipFilename": "batchDeleteAnalyzer-55665447354d764a4c74-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/batchDeleteAnalyzer-55665447354d764a4c74-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/batchDeleteAnalyzer-cloudformation-template.json",
+        "logicalId": "functionbatchDeleteAnalyzer"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.144Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole21a0a112-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:batchDeleteAnalyzer-dev",
+        "Name": "batchDeleteAnalyzer-dev",
+        "LambdaExecutionRole": "powersightLambdaRole21a0a112-dev"
+      },
+      "lastPushDirHash": "4sDZzzXU1Eju04vSpfKJ2DaCjus="
+    },
+    "getActiveDeviceRental": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2024-05-24T10:25:28.784Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-05-24T10:25:31.389Z",
+      "distZipFilename": "getActiveDeviceRental-7766347a554b66507236-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/getActiveDeviceRental-7766347a554b66507236-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/getActiveDeviceRental-cloudformation-template.json",
+        "logicalId": "functiongetActiveDeviceRental"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.153Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole51a02faf-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:getActiveDeviceRental-dev",
+        "Name": "getActiveDeviceRental-dev",
+        "LambdaExecutionRole": "powersightLambdaRole51a02faf-dev"
+      },
+      "lastPushDirHash": "qSVPZZDNBhJhS1cnnkfcnL4Gffc=",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "powersight",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ]
+        }
+      ]
+    },
+    "sendEMail": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [],
+      "lastBuildTimeStamp": "2024-06-19T21:29:44.985Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-06-19T21:30:00.769Z",
+      "distZipFilename": "sendEMail-7965344461464c476a6b-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/sendEMail-7965344461464c476a6b-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/sendEMail-cloudformation-template.json",
+        "logicalId": "functionsendEMail"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.161Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole9bfbe297-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:sendEMail-dev",
+        "Name": "sendEMail-dev",
+        "LambdaExecutionRole": "powersightLambdaRole9bfbe297-dev"
+      },
+      "lastPushDirHash": "ygSGLoxs1oDQnspDskI+gSGkd2M="
+    },
+    "addPasswordProtection": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2024-06-19T20:01:29.211Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-06-19T20:01:29.241Z",
+      "distZipFilename": "addPasswordProtection-4e47584270524c366448-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/addPasswordProtection-4e47584270524c366448-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/addPasswordProtection-cloudformation-template.json",
+        "logicalId": "functionaddPasswordProtection"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.168Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole1fa110e5-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:addPasswordProtection-dev",
+        "Name": "addPasswordProtection-dev",
+        "LambdaExecutionRole": "powersightLambdaRole1fa110e5-dev"
+      },
+      "lastPushDirHash": "QUktPfGc2JN0zd319zxmmLsEJvE="
+    },
+    "getAnalyzersForAGateway": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [],
+      "lastBuildTimeStamp": "2024-06-29T00:50:56.466Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-06-29T00:51:04.293Z",
+      "distZipFilename": "getAnalyzersForAGateway-55743455657a6b4d4175-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/getAnalyzersForAGateway-55743455657a6b4d4175-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/getAnalyzersForAGateway-cloudformation-template.json",
+        "logicalId": "functiongetAnalyzersForAGateway"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.176Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole7e238005-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:getAnalyzersForAGateway-dev",
+        "Name": "getAnalyzersForAGateway-dev",
+        "LambdaExecutionRole": "powersightLambdaRole7e238005-dev"
+      },
+      "lastPushDirHash": "Chh8ihmYDQad+VyifXMBIIt1tt0="
+    },
+    "getFileNames": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [],
+      "lastBuildTimeStamp": "2024-08-20T15:54:46.562Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-08-20T15:54:53.627Z",
+      "distZipFilename": "getFileNames-32476f31645644613274-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/getFileNames-32476f31645644613274-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/getFileNames-cloudformation-template.json",
+        "logicalId": "functiongetFileNames"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.183Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRoledc21f161-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:getFileNames-dev",
+        "Name": "getFileNames-dev",
+        "LambdaExecutionRole": "powersightLambdaRoledc21f161-dev"
+      },
+      "lastPushDirHash": "ZGjOJlZ/7kmVPa8dhzxBxuFMgYU="
+    },
+    "updateIoTDataFromDynamoDBToGateway": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2024-12-15T10:40:47.678Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-12-15T10:40:57.027Z",
+      "distZipFilename": "updateIoTDataFromDynamoDBToGateway-61343252666a6b467779-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/updateIoTDataFromDynamoDBToGateway-61343252666a6b467779-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/updateIoTDataFromDynamoDBToGateway-cloudformation-template.json",
+        "logicalId": "functionupdateIoTDataFromDynamoDBToGateway"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.190Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole40cc1d6a-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:updateIoTDataFromDynamoDBToGateway-dev",
+        "Name": "updateIoTDataFromDynamoDBToGateway-dev",
+        "LambdaExecutionRole": "powersightLambdaRole40cc1d6a-dev"
+      },
+      "lastPushDirHash": "4/PRBILpMACv71r0mTXic71+MmE="
+    },
+    "updateIoTDataFromDynamoDBToAnalyzer": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2024-12-15T10:40:58.842Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-12-15T10:41:06.895Z",
+      "distZipFilename": "updateIoTDataFromDynamoDBToAnalyzer-776c437566336e6c2f41-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/updateIoTDataFromDynamoDBToAnalyzer-776c437566336e6c2f41-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/updateIoTDataFromDynamoDBToAnalyzer-cloudformation-template.json",
+        "logicalId": "functionupdateIoTDataFromDynamoDBToAnalyzer"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.198Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole6b5a5122-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:updateIoTDataFromDynamoDBToAnalyzer-dev",
+        "Name": "updateIoTDataFromDynamoDBToAnalyzer-dev",
+        "LambdaExecutionRole": "powersightLambdaRole6b5a5122-dev"
+      },
+      "lastPushDirHash": "1q1h6LAgaJFFgSknQesoHHKt8oE="
+    },
+    "IoTShadow": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2024-09-24T12:20:05.974Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-09-24T12:20:19.134Z",
+      "distZipFilename": "IoTShadow-5533333638466c6f4d6d-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/IoTShadow-5533333638466c6f4d6d-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/IoTShadow-cloudformation-template.json",
+        "logicalId": "functionIoTShadow"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.205Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole0f0bb739-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:IoTShadow-dev",
+        "Name": "IoTShadow-dev",
+        "LambdaExecutionRole": "powersightLambdaRole0f0bb739-dev"
+      },
+      "lastPushDirHash": "YJoopJdhN7eNgnEHgK78K85OOZM="
+    },
+    "sendAlert": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [],
+      "lastBuildTimeStamp": "2025-02-06T21:03:39.733Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2025-02-06T21:03:39.775Z",
+      "distZipFilename": "sendAlert-6c61585a6f6642563353-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/sendAlert-6c61585a6f6642563353-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/sendAlert-cloudformation-template.json",
+        "logicalId": "functionsendAlert"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.212Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRolef452c05e-dev",
+        "Region": "us-west-1",
+        "CloudWatchEventRule": "amplify-powersight-dev-32334-functi-CloudWatchEvent-M7awaM2h56nz",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:sendAlert-dev",
+        "Name": "sendAlert-dev",
+        "LambdaExecutionRole": "powersightLambdaRolef452c05e-dev"
+      },
+      "lastPushDirHash": "nZ56/Wl3Hyg0fawGFycOdtRA5L0="
+    },
+    "updateDeviceStatus": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [],
+      "lastBuildTimeStamp": "2025-02-06T21:03:40.853Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2025-02-06T21:03:46.966Z",
+      "distZipFilename": "updateDeviceStatus-5a777963675261414157-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/updateDeviceStatus-5a777963675261414157-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/updateDeviceStatus-cloudformation-template.json",
+        "logicalId": "functionupdateDeviceStatus"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.221Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole464b25ee-dev",
+        "Region": "us-west-1",
+        "CloudWatchEventRule": "amplify-powersight-dev-32334-functi-CloudWatchEvent-P7LVYsc31XQJ",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:updateDeviceStatus-dev",
+        "Name": "updateDeviceStatus-dev",
+        "LambdaExecutionRole": "powersightLambdaRole464b25ee-dev"
+      },
+      "lastPushDirHash": "sG2JYkiaPxYIo+MqF7wi3UMjAZA="
+    },
+    "upgradeFirmware": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [],
+      "lastBuildTimeStamp": "2024-11-16T13:58:27.057Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-11-16T13:58:36.497Z",
+      "distZipFilename": "upgradeFirmware-6b5753784a387037464c-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/upgradeFirmware-6b5753784a387037464c-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/upgradeFirmware-cloudformation-template.json",
+        "logicalId": "functionupgradeFirmware"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.229Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRolefff122eb-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:upgradeFirmware-dev",
+        "Name": "upgradeFirmware-dev",
+        "LambdaExecutionRole": "powersightLambdaRolefff122eb-dev"
+      },
+      "lastPushDirHash": "ew81k7HCNi5S4WopeNCtfDHADtk="
+    },
+    "getFirmwareFileNames": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [],
+      "lastBuildTimeStamp": "2024-11-08T05:50:19.535Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-11-08T05:50:29.426Z",
+      "distZipFilename": "getFirmwareFileNames-34476a6a477578414554-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/getFirmwareFileNames-34476a6a477578414554-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/getFirmwareFileNames-cloudformation-template.json",
+        "logicalId": "functiongetFirmwareFileNames"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.236Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole6f1c3fba-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:getFirmwareFileNames-dev",
+        "Name": "getFirmwareFileNames-dev",
+        "LambdaExecutionRole": "powersightLambdaRole6f1c3fba-dev"
+      },
+      "lastPushDirHash": "USUDO4Q6XjbbnDVFc2y2jlLwUSs="
+    },
+    "updateDeviceCommunicationStatusInGateway": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [],
+      "lastBuildTimeStamp": "2024-12-15T10:41:08.911Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-12-15T10:41:17.670Z",
+      "distZipFilename": "updateDeviceCommunicationStatusInGateway-32786848567331524d32-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/updateDeviceCommunicationStatusInGateway-32786848567331524d32-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/updateDeviceCommunicationStatusInGateway-cloudformation-template.json",
+        "logicalId": "functionupdateDeviceCommunicationStatusInGateway"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.244Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRolee9b7b3f9-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:updateDeviceCommunicationStatusInGateway-dev",
+        "Name": "updateDeviceCommunicationStatusInGateway-dev",
+        "LambdaExecutionRole": "powersightLambdaRolee9b7b3f9-dev"
+      },
+      "lastPushDirHash": "10D9OgTMphH8cftVRCfm8OdQ9ho="
+    },
+    "updateDeviceCommunicationStatusInAnalyzer": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [],
+      "lastBuildTimeStamp": "2024-12-15T10:41:19.264Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-12-15T10:41:28.766Z",
+      "distZipFilename": "updateDeviceCommunicationStatusInAnalyzer-7977796c626839724259-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/updateDeviceCommunicationStatusInAnalyzer-7977796c626839724259-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/updateDeviceCommunicationStatusInAnalyzer-cloudformation-template.json",
+        "logicalId": "functionupdateDeviceCommunicationStatusInAnalyzer"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.251Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole0fe4a234-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:updateDeviceCommunicationStatusInAnalyzer-dev",
+        "Name": "updateDeviceCommunicationStatusInAnalyzer-dev",
+        "LambdaExecutionRole": "powersightLambdaRole0fe4a234-dev"
+      },
+      "lastPushDirHash": "K1koyPX/DTQEEitnZg8ht365DHU="
+    },
+    "s3": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [],
+      "lastBuildTimeStamp": "2024-12-15T03:19:13.259Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2024-12-15T03:19:29.505Z",
+      "distZipFilename": "s3-453142416a5769466672-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/s3-453142416a5769466672-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/s3-cloudformation-template.json",
+        "logicalId": "functions3"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.258Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRolecbafe448-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:s3-dev",
+        "Name": "s3-dev",
+        "LambdaExecutionRole": "powersightLambdaRolecbafe448-dev"
+      },
+      "lastPushDirHash": "biHE3AvYWYOxIQf2we0CiNCHY2c="
+    },
+    "sendDisconnectAlarm": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [],
+      "lastBuildTimeStamp": "2025-05-22T18:29:13.438Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2025-05-22T18:29:18.069Z",
+      "distZipFilename": "sendDisconnectAlarm-72316e74696246512b36-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-powersight-dev-32334-deployment",
+        "s3Key": "amplify-builds/sendDisconnectAlarm-72316e74696246512b36-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/function/sendDisconnectAlarm-cloudformation-template.json",
+        "logicalId": "functionsendDisconnectAlarm"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.893Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::426841475258:role/powersightLambdaRole06b8cdb4-dev",
+        "Region": "us-west-1",
+        "Arn": "arn:aws:lambda:us-west-1:426841475258:function:sendDisconnectAlarm-dev",
+        "Name": "sendDisconnectAlarm-dev",
+        "LambdaExecutionRole": "powersightLambdaRole06b8cdb4-dev",
+        "CloudWatchEventRule": "amplify-powersight-dev-32334-functi-CloudWatchEvent-WWAqfg3PfD0i"
+      },
+      "lastPushDirHash": "zbBzsy0Kje77as5h0VvEFNCm+Pg="
+    }
+  },
+  "storage": {
+    "powersight": {
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "powersight0b720405",
+          "attributes": [
+            "UserPoolId"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "userPoolGroups",
+          "attributes": [
+            "AdminGroupRole"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "userPoolGroups",
+          "attributes": [
+            "ClientGroupRole"
+          ]
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "S3",
+      "output": {
+        "BucketName": "powersighta118a3c3f62e4994aecfa01048f2d7d032334-dev",
+        "Region": "us-west-1"
+      },
+      "lastPushTimeStamp": "2025-05-22T18:30:21.273Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-powersight-dev-32334-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
+        "logicalId": "storagepowersight"
+      },
+      "lastPushDirHash": "5JvotmR15ouic/RsD2XJbvsQ504="
+    }
+  }
+}

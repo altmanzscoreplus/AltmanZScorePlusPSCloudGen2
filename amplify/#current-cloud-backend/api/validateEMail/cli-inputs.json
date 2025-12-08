@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/validateEMail": {
+      "name": "/validateEMail",
+      "lambdaFunction": "validateEMail",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

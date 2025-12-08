@@ -1,0 +1,1394 @@
+{
+  "Parameters": {
+    "DynamoDBModelTableReadIOPS": {
+      "Type": "Number",
+      "Default": 5,
+      "Description": "The number of read IOPS the table should support."
+    },
+    "DynamoDBModelTableWriteIOPS": {
+      "Type": "Number",
+      "Default": 5,
+      "Description": "The number of write IOPS the table should support."
+    },
+    "DynamoDBBillingMode": {
+      "Type": "String",
+      "Default": "PAY_PER_REQUEST",
+      "AllowedValues": [
+        "PAY_PER_REQUEST",
+        "PROVISIONED"
+      ],
+      "Description": "Configure @model types to create DynamoDB tables with PAY_PER_REQUEST or PROVISIONED billing modes."
+    },
+    "DynamoDBEnablePointInTimeRecovery": {
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": [
+        "true",
+        "false"
+      ],
+      "Description": "Whether to enable Point in Time Recovery on the table."
+    },
+    "DynamoDBEnableServerSideEncryption": {
+      "Type": "String",
+      "Default": "true",
+      "AllowedValues": [
+        "true",
+        "false"
+      ],
+      "Description": "Enable server side encryption powered by KMS."
+    },
+    "referencetotransformerrootstackenv10C5A902Ref": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackGraphQLAPI20497F53ApiId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackS3DeploymentBucket7592718ARef": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpreAuth0FunctionQuerygetCustomerpreAuth0FunctionAppSyncFunction810B798FFunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackGatewayNestedStackGatewayNestedStackResourceB7983F93OutputstransformerrootstackGatewayQuerygetGatewayauth0FunctionQuerygetGatewayauth0FunctionAppSyncFunctionBC6479D3FunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerylistCustomerspreAuth0FunctionQuerylistCustomerspreAuth0FunctionAppSyncFunction020ECEA0FunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationcreateCustomerinit0FunctionMutationcreateCustomerinit0FunctionAppSyncFunctionD03D5B32FunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationcreateCustomerpreAuth0FunctionMutationcreateCustomerpreAuth0FunctionAppSyncFunctionB11EC148FunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationupdateCustomerinit0FunctionMutationupdateCustomerinit0FunctionAppSyncFunction06D4D55BFunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationdeleteCustomerpreAuth0FunctionMutationdeleteCustomerpreAuth0FunctionAppSyncFunction5E0FB8A6FunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackGatewayNestedStackGatewayNestedStackResourceB7983F93OutputstransformerrootstackGatewaySubscriptiononCreateGatewayauth0FunctionSubscriptiononCreateGatewayauth0FunctionAppSyncFunction21577738FunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerSubscriptionOnCreateCustomerDataResolverFnSubscriptionOnCreateCustomerDataResolverFnAppSyncFunctionD15C4663FunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerCustomerOwnerDataResolverFnCustomerOwnerDataResolverFnAppSyncFunction30F2FF37FunctionId": {
+      "Type": "String"
+    }
+  },
+  "Conditions": {
+    "HasEnvironmentParameter": {
+      "Fn::Not": [
+        {
+          "Fn::Equals": [
+            {
+              "Ref": "referencetotransformerrootstackenv10C5A902Ref"
+            },
+            "NONE"
+          ]
+        }
+      ]
+    },
+    "ShouldUseServerSideEncryption": {
+      "Fn::Equals": [
+        {
+          "Ref": "DynamoDBEnableServerSideEncryption"
+        },
+        "true"
+      ]
+    },
+    "ShouldUsePayPerRequestBilling": {
+      "Fn::Equals": [
+        {
+          "Ref": "DynamoDBBillingMode"
+        },
+        "PAY_PER_REQUEST"
+      ]
+    },
+    "ShouldUsePointInTimeRecovery": {
+      "Fn::Equals": [
+        {
+          "Ref": "DynamoDBEnablePointInTimeRecovery"
+        },
+        "true"
+      ]
+    }
+  },
+  "Resources": {
+    "CustomerAlarmLevelAndIntervalTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH"
+          }
+        ],
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "customer_id",
+            "AttributeType": "S"
+          }
+        ],
+        "BillingMode": {
+          "Fn::If": [
+            "ShouldUsePayPerRequestBilling",
+            "PAY_PER_REQUEST",
+            {
+              "Ref": "AWS::NoValue"
+            }
+          ]
+        },
+        "GlobalSecondaryIndexes": [
+          {
+            "IndexName": "byCustomerAlarmLevelAndIntervalByCustomerId",
+            "KeySchema": [
+              {
+                "AttributeName": "customer_id",
+                "KeyType": "HASH"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+              "Fn::If": [
+                "ShouldUsePayPerRequestBilling",
+                {
+                  "Ref": "AWS::NoValue"
+                },
+                {
+                  "ReadCapacityUnits": {
+                    "Ref": "DynamoDBModelTableReadIOPS"
+                  },
+                  "WriteCapacityUnits": {
+                    "Ref": "DynamoDBModelTableWriteIOPS"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "PointInTimeRecoverySpecification": {
+          "Fn::If": [
+            "ShouldUsePointInTimeRecovery",
+            {
+              "PointInTimeRecoveryEnabled": true
+            },
+            {
+              "Ref": "AWS::NoValue"
+            }
+          ]
+        },
+        "ProvisionedThroughput": {
+          "Fn::If": [
+            "ShouldUsePayPerRequestBilling",
+            {
+              "Ref": "AWS::NoValue"
+            },
+            {
+              "ReadCapacityUnits": {
+                "Ref": "DynamoDBModelTableReadIOPS"
+              },
+              "WriteCapacityUnits": {
+                "Ref": "DynamoDBModelTableWriteIOPS"
+              }
+            }
+          ]
+        },
+        "SSESpecification": {
+          "SSEEnabled": {
+            "Fn::If": [
+              "ShouldUseServerSideEncryption",
+              true,
+              false
+            ]
+          }
+        },
+        "StreamSpecification": {
+          "StreamViewType": "NEW_AND_OLD_IMAGES"
+        },
+        "TableName": {
+          "Fn::Join": [
+            "",
+            [
+              "CustomerAlarmLevelAndInterval-",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "-",
+              {
+                "Ref": "referencetotransformerrootstackenv10C5A902Ref"
+              }
+            ]
+          ]
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete"
+    },
+    "CustomerAlarmLevelAndIntervalIAMRole1412E5B9": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "appsync.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "RoleName": {
+          "Fn::Join": [
+            "",
+            [
+              "CustomerAlarmLevelAn3250d3-",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "-",
+              {
+                "Ref": "referencetotransformerrootstackenv10C5A902Ref"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "CustomerAlarmLevelAndIntervalIAMRoleDefaultPolicy01A6E3C7": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "CustomerAlarmLevelAndIntervalTable",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "CustomerAlarmLevelAndIntervalTable",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "CustomerAlarmLevelAndIntervalIAMRoleDefaultPolicy01A6E3C7",
+        "Roles": [
+          {
+            "Ref": "CustomerAlarmLevelAndIntervalIAMRole1412E5B9"
+          }
+        ]
+      }
+    },
+    "DynamoDBAccess71ABE5AE": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:UpdateItem"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Sub": [
+                    "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tablename}",
+                    {
+                      "tablename": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "CustomerAlarmLevelAndInterval-",
+                            {
+                              "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+                            },
+                            "-",
+                            {
+                              "Ref": "referencetotransformerrootstackenv10C5A902Ref"
+                            }
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Fn::Sub": [
+                    "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tablename}/*",
+                    {
+                      "tablename": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "CustomerAlarmLevelAndInterval-",
+                            {
+                              "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+                            },
+                            "-",
+                            {
+                              "Ref": "referencetotransformerrootstackenv10C5A902Ref"
+                            }
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "DynamoDBAccess71ABE5AE",
+        "Roles": [
+          {
+            "Ref": "CustomerAlarmLevelAndIntervalIAMRole1412E5B9"
+          }
+        ]
+      }
+    },
+    "CustomerAlarmLevelAndIntervalDataSource": {
+      "Type": "AWS::AppSync::DataSource",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "Name": "CustomerAlarmLevelAndIntervalTable",
+        "Type": "AMAZON_DYNAMODB",
+        "DynamoDBConfig": {
+          "AwsRegion": {
+            "Ref": "AWS::Region"
+          },
+          "TableName": {
+            "Ref": "CustomerAlarmLevelAndIntervalTable"
+          }
+        },
+        "ServiceRoleArn": {
+          "Fn::GetAtt": [
+            "CustomerAlarmLevelAndIntervalIAMRole1412E5B9",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "CustomerAlarmLevelAndIntervalIAMRole1412E5B9"
+      ]
+    },
+    "QueryGetCustomerAlarmLevelAndIntervalDataResolverFnQueryGetCustomerAlarmLevelAndIntervalDataResolverFnAppSyncFunction4DA06BC7": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "CustomerAlarmLevelAndIntervalDataSource",
+            "Name"
+          ]
+        },
+        "Name": "QueryGetCustomerAlarmLevelAndIntervalDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getCustomerAlarmLevelAndInterval.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getCustomerAlarmLevelAndInterval.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "CustomerAlarmLevelAndIntervalDataSource"
+      ]
+    },
+    "GetCustomerAlarmLevelAndIntervalResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "getCustomerAlarmLevelAndInterval",
+        "TypeName": "Query",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpreAuth0FunctionQuerygetCustomerpreAuth0FunctionAppSyncFunction810B798FFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackGatewayNestedStackGatewayNestedStackResourceB7983F93OutputstransformerrootstackGatewayQuerygetGatewayauth0FunctionQuerygetGatewayauth0FunctionAppSyncFunctionBC6479D3FunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "QueryGetCustomerAlarmLevelAndIntervalDataResolverFnQueryGetCustomerAlarmLevelAndIntervalDataResolverFnAppSyncFunction4DA06BC7",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"getCustomerAlarmLevelAndInterval\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "CustomerAlarmLevelAndIntervalTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "QueryListCustomerAlarmLevelAndIntervalsDataResolverFnQueryListCustomerAlarmLevelAndIntervalsDataResolverFnAppSyncFunctionD1320636": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "CustomerAlarmLevelAndIntervalDataSource",
+            "Name"
+          ]
+        },
+        "Name": "QueryListCustomerAlarmLevelAndIntervalsDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.listCustomerAlarmLevelAndIntervals.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.listCustomerAlarmLevelAndIntervals.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "CustomerAlarmLevelAndIntervalDataSource"
+      ]
+    },
+    "ListCustomerAlarmLevelAndIntervalResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "listCustomerAlarmLevelAndIntervals",
+        "TypeName": "Query",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerylistCustomerspreAuth0FunctionQuerylistCustomerspreAuth0FunctionAppSyncFunction020ECEA0FunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackGatewayNestedStackGatewayNestedStackResourceB7983F93OutputstransformerrootstackGatewayQuerygetGatewayauth0FunctionQuerygetGatewayauth0FunctionAppSyncFunctionBC6479D3FunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "QueryListCustomerAlarmLevelAndIntervalsDataResolverFnQueryListCustomerAlarmLevelAndIntervalsDataResolverFnAppSyncFunctionD1320636",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"listCustomerAlarmLevelAndIntervals\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "CustomerAlarmLevelAndIntervalTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "MutationcreateCustomerAlarmLevelAndIntervalauth0FunctionMutationcreateCustomerAlarmLevelAndIntervalauth0FunctionAppSyncFunctionDFB184EA": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Ref": "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name"
+        },
+        "Name": "MutationcreateCustomerAlarmLevelAndIntervalauth0Function",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.createCustomerAlarmLevelAndInterval.auth.1.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson({})"
+      }
+    },
+    "MutationCreateCustomerAlarmLevelAndIntervalDataResolverFnMutationCreateCustomerAlarmLevelAndIntervalDataResolverFnAppSyncFunction174F4BF9": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "CustomerAlarmLevelAndIntervalDataSource",
+            "Name"
+          ]
+        },
+        "Name": "MutationCreateCustomerAlarmLevelAndIntervalDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.createCustomerAlarmLevelAndInterval.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.createCustomerAlarmLevelAndInterval.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "CustomerAlarmLevelAndIntervalDataSource"
+      ]
+    },
+    "CreateCustomerAlarmLevelAndIntervalResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "createCustomerAlarmLevelAndInterval",
+        "TypeName": "Mutation",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationcreateCustomerinit0FunctionMutationcreateCustomerinit0FunctionAppSyncFunctionD03D5B32FunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationcreateCustomerpreAuth0FunctionMutationcreateCustomerpreAuth0FunctionAppSyncFunctionB11EC148FunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "MutationcreateCustomerAlarmLevelAndIntervalauth0FunctionMutationcreateCustomerAlarmLevelAndIntervalauth0FunctionAppSyncFunctionDFB184EA",
+                "FunctionId"
+              ]
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "MutationCreateCustomerAlarmLevelAndIntervalDataResolverFnMutationCreateCustomerAlarmLevelAndIntervalDataResolverFnAppSyncFunction174F4BF9",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Mutation\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"createCustomerAlarmLevelAndInterval\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "CustomerAlarmLevelAndIntervalTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "MutationupdateCustomerAlarmLevelAndIntervalauth0FunctionMutationupdateCustomerAlarmLevelAndIntervalauth0FunctionAppSyncFunction5FBE37B0": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "CustomerAlarmLevelAndIntervalDataSource",
+            "Name"
+          ]
+        },
+        "Name": "MutationupdateCustomerAlarmLevelAndIntervalauth0Function",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.updateCustomerAlarmLevelAndInterval.auth.1.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.updateCustomerAlarmLevelAndInterval.auth.1.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "CustomerAlarmLevelAndIntervalDataSource"
+      ]
+    },
+    "MutationUpdateCustomerAlarmLevelAndIntervalDataResolverFnMutationUpdateCustomerAlarmLevelAndIntervalDataResolverFnAppSyncFunctionFEBEB598": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "CustomerAlarmLevelAndIntervalDataSource",
+            "Name"
+          ]
+        },
+        "Name": "MutationUpdateCustomerAlarmLevelAndIntervalDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.updateCustomerAlarmLevelAndInterval.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.updateCustomerAlarmLevelAndInterval.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "CustomerAlarmLevelAndIntervalDataSource"
+      ]
+    },
+    "UpdateCustomerAlarmLevelAndIntervalResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "updateCustomerAlarmLevelAndInterval",
+        "TypeName": "Mutation",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationupdateCustomerinit0FunctionMutationupdateCustomerinit0FunctionAppSyncFunction06D4D55BFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationcreateCustomerpreAuth0FunctionMutationcreateCustomerpreAuth0FunctionAppSyncFunctionB11EC148FunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "MutationupdateCustomerAlarmLevelAndIntervalauth0FunctionMutationupdateCustomerAlarmLevelAndIntervalauth0FunctionAppSyncFunction5FBE37B0",
+                "FunctionId"
+              ]
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "MutationUpdateCustomerAlarmLevelAndIntervalDataResolverFnMutationUpdateCustomerAlarmLevelAndIntervalDataResolverFnAppSyncFunctionFEBEB598",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Mutation\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"updateCustomerAlarmLevelAndInterval\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "CustomerAlarmLevelAndIntervalTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "MutationdeleteCustomerAlarmLevelAndIntervalauth0FunctionMutationdeleteCustomerAlarmLevelAndIntervalauth0FunctionAppSyncFunctionE5ED5C6C": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "CustomerAlarmLevelAndIntervalDataSource",
+            "Name"
+          ]
+        },
+        "Name": "MutationdeleteCustomerAlarmLevelAndIntervalauth0Function",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.deleteCustomerAlarmLevelAndInterval.auth.1.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.deleteCustomerAlarmLevelAndInterval.auth.1.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "CustomerAlarmLevelAndIntervalDataSource"
+      ]
+    },
+    "MutationDeleteCustomerAlarmLevelAndIntervalDataResolverFnMutationDeleteCustomerAlarmLevelAndIntervalDataResolverFnAppSyncFunction636F2A5B": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "CustomerAlarmLevelAndIntervalDataSource",
+            "Name"
+          ]
+        },
+        "Name": "MutationDeleteCustomerAlarmLevelAndIntervalDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.deleteCustomerAlarmLevelAndInterval.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.deleteCustomerAlarmLevelAndInterval.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "CustomerAlarmLevelAndIntervalDataSource"
+      ]
+    },
+    "DeleteCustomerAlarmLevelAndIntervalResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "deleteCustomerAlarmLevelAndInterval",
+        "TypeName": "Mutation",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationdeleteCustomerpreAuth0FunctionMutationdeleteCustomerpreAuth0FunctionAppSyncFunction5E0FB8A6FunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "MutationdeleteCustomerAlarmLevelAndIntervalauth0FunctionMutationdeleteCustomerAlarmLevelAndIntervalauth0FunctionAppSyncFunctionE5ED5C6C",
+                "FunctionId"
+              ]
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "MutationDeleteCustomerAlarmLevelAndIntervalDataResolverFnMutationDeleteCustomerAlarmLevelAndIntervalDataResolverFnAppSyncFunction636F2A5B",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Mutation\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"deleteCustomerAlarmLevelAndInterval\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "CustomerAlarmLevelAndIntervalTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "SubscriptiononCreateCustomerAlarmLevelAndIntervalResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "onCreateCustomerAlarmLevelAndInterval",
+        "TypeName": "Subscription",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackGatewayNestedStackGatewayNestedStackResourceB7983F93OutputstransformerrootstackGatewaySubscriptiononCreateGatewayauth0FunctionSubscriptiononCreateGatewayauth0FunctionAppSyncFunction21577738FunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerSubscriptionOnCreateCustomerDataResolverFnSubscriptionOnCreateCustomerDataResolverFnAppSyncFunctionD15C4663FunctionId"
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Subscription\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"onCreateCustomerAlarmLevelAndInterval\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "SubscriptiononUpdateCustomerAlarmLevelAndIntervalResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "onUpdateCustomerAlarmLevelAndInterval",
+        "TypeName": "Subscription",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackGatewayNestedStackGatewayNestedStackResourceB7983F93OutputstransformerrootstackGatewaySubscriptiononCreateGatewayauth0FunctionSubscriptiononCreateGatewayauth0FunctionAppSyncFunction21577738FunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerSubscriptionOnCreateCustomerDataResolverFnSubscriptionOnCreateCustomerDataResolverFnAppSyncFunctionD15C4663FunctionId"
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Subscription\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"onUpdateCustomerAlarmLevelAndInterval\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "SubscriptiononDeleteCustomerAlarmLevelAndIntervalResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "onDeleteCustomerAlarmLevelAndInterval",
+        "TypeName": "Subscription",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackGatewayNestedStackGatewayNestedStackResourceB7983F93OutputstransformerrootstackGatewaySubscriptiononCreateGatewayauth0FunctionSubscriptiononCreateGatewayauth0FunctionAppSyncFunction21577738FunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerSubscriptionOnCreateCustomerDataResolverFnSubscriptionOnCreateCustomerDataResolverFnAppSyncFunctionD15C4663FunctionId"
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Subscription\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"onDeleteCustomerAlarmLevelAndInterval\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "QueryGetCustomerAlarmLevelAndIntervalByCustomerIdDataResolverFnQueryGetCustomerAlarmLevelAndIntervalByCustomerIdDataResolverFnAppSyncFunction26C0F602": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "CustomerAlarmLevelAndIntervalDataSource",
+            "Name"
+          ]
+        },
+        "Name": "QueryGetCustomerAlarmLevelAndIntervalByCustomerIdDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getCustomerAlarmLevelAndIntervalByCustomerId.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getCustomerAlarmLevelAndIntervalByCustomerId.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "CustomerAlarmLevelAndIntervalDataSource"
+      ]
+    },
+    "QuerygetCustomerAlarmLevelAndIntervalByCustomerIdResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "getCustomerAlarmLevelAndIntervalByCustomerId",
+        "TypeName": "Query",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackGatewayNestedStackGatewayNestedStackResourceB7983F93OutputstransformerrootstackGatewayQuerygetGatewayauth0FunctionQuerygetGatewayauth0FunctionAppSyncFunctionBC6479D3FunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "QueryGetCustomerAlarmLevelAndIntervalByCustomerIdDataResolverFnQueryGetCustomerAlarmLevelAndIntervalByCustomerIdDataResolverFnAppSyncFunction26C0F602",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"getCustomerAlarmLevelAndIntervalByCustomerId\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "CustomerAlarmLevelAndIntervalTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "CustomerAlarmLevelAndIntervalownerResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "owner",
+        "TypeName": "CustomerAlarmLevelAndInterval",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerCustomerOwnerDataResolverFnCustomerOwnerDataResolverFnAppSyncFunction30F2FF37FunctionId"
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"CustomerAlarmLevelAndInterval\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"owner\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    }
+  },
+  "Outputs": {
+    "GetAttCustomerAlarmLevelAndIntervalTableStreamArn": {
+      "Description": "Your DynamoDB table StreamArn.",
+      "Value": {
+        "Fn::GetAtt": [
+          "CustomerAlarmLevelAndIntervalTable",
+          "StreamArn"
+        ]
+      },
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            ":",
+            [
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "GetAtt:CustomerAlarmLevelAndIntervalTable:StreamArn"
+            ]
+          ]
+        }
+      }
+    },
+    "GetAttCustomerAlarmLevelAndIntervalTableName": {
+      "Description": "Your DynamoDB table name.",
+      "Value": {
+        "Ref": "CustomerAlarmLevelAndIntervalTable"
+      },
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            ":",
+            [
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "GetAtt:CustomerAlarmLevelAndIntervalTable:Name"
+            ]
+          ]
+        }
+      }
+    },
+    "GetAttCustomerAlarmLevelAndIntervalDataSourceName": {
+      "Description": "Your model DataSource name.",
+      "Value": {
+        "Fn::GetAtt": [
+          "CustomerAlarmLevelAndIntervalDataSource",
+          "Name"
+        ]
+      },
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            ":",
+            [
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "GetAtt:CustomerAlarmLevelAndIntervalDataSource:Name"
+            ]
+          ]
+        }
+      }
+    },
+    "transformerrootstackCustomerAlarmLevelAndIntervalCustomerAlarmLevelAndIntervalDataSourceEEC56331Name": {
+      "Value": {
+        "Fn::GetAtt": [
+          "CustomerAlarmLevelAndIntervalDataSource",
+          "Name"
+        ]
+      }
+    },
+    "transformerrootstackCustomerAlarmLevelAndIntervalCustomerAlarmLevelAndIntervalTableF9F19FABRef": {
+      "Value": {
+        "Ref": "CustomerAlarmLevelAndIntervalTable"
+      }
+    },
+    "transformerrootstackCustomerAlarmLevelAndIntervalCustomerAlarmLevelAndIntervalTableF9F19FABStreamArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "CustomerAlarmLevelAndIntervalTable",
+          "StreamArn"
+        ]
+      }
+    }
+  }
+}

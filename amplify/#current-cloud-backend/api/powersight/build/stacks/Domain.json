@@ -1,0 +1,2029 @@
+{
+  "Parameters": {
+    "DynamoDBModelTableReadIOPS": {
+      "Type": "Number",
+      "Default": 5,
+      "Description": "The number of read IOPS the table should support."
+    },
+    "DynamoDBModelTableWriteIOPS": {
+      "Type": "Number",
+      "Default": 5,
+      "Description": "The number of write IOPS the table should support."
+    },
+    "DynamoDBBillingMode": {
+      "Type": "String",
+      "Default": "PAY_PER_REQUEST",
+      "AllowedValues": [
+        "PAY_PER_REQUEST",
+        "PROVISIONED"
+      ],
+      "Description": "Configure @model types to create DynamoDB tables with PAY_PER_REQUEST or PROVISIONED billing modes."
+    },
+    "DynamoDBEnablePointInTimeRecovery": {
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": [
+        "true",
+        "false"
+      ],
+      "Description": "Whether to enable Point in Time Recovery on the table."
+    },
+    "DynamoDBEnableServerSideEncryption": {
+      "Type": "String",
+      "Default": "true",
+      "AllowedValues": [
+        "true",
+        "false"
+      ],
+      "Description": "Enable server side encryption powered by KMS."
+    },
+    "referencetotransformerrootstackenv10C5A902Ref": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackGraphQLAPI20497F53ApiId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackS3DeploymentBucket7592718ARef": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpreAuth0FunctionQuerygetCustomerpreAuth0FunctionAppSyncFunction810B798FFunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackPSFileNestedStackPSFileNestedStackResource46845FB7OutputstransformerrootstackPSFileQuerygetPSFileauth0FunctionQuerygetPSFileauth0FunctionAppSyncFunction901BA9DAFunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerylistCustomerspreAuth0FunctionQuerylistCustomerspreAuth0FunctionAppSyncFunction020ECEA0FunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationcreateCustomerinit0FunctionMutationcreateCustomerinit0FunctionAppSyncFunctionD03D5B32FunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationcreateCustomerpreAuth0FunctionMutationcreateCustomerpreAuth0FunctionAppSyncFunctionB11EC148FunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationupdateCustomerinit0FunctionMutationupdateCustomerinit0FunctionAppSyncFunction06D4D55BFunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationdeleteCustomerpreAuth0FunctionMutationdeleteCustomerpreAuth0FunctionAppSyncFunction5E0FB8A6FunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackPSFileNestedStackPSFileNestedStackResource46845FB7OutputstransformerrootstackPSFileSubscriptiononCreatePSFileauth0FunctionSubscriptiononCreatePSFileauth0FunctionAppSyncFunction15362174FunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerSubscriptionOnCreateCustomerDataResolverFnSubscriptionOnCreateCustomerDataResolverFnAppSyncFunctionD15C4663FunctionId": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerCustomerOwnerDataResolverFnCustomerOwnerDataResolverFnAppSyncFunction30F2FF37FunctionId": {
+      "Type": "String"
+    }
+  },
+  "Conditions": {
+    "HasEnvironmentParameter": {
+      "Fn::Not": [
+        {
+          "Fn::Equals": [
+            {
+              "Ref": "referencetotransformerrootstackenv10C5A902Ref"
+            },
+            "NONE"
+          ]
+        }
+      ]
+    },
+    "ShouldUseServerSideEncryption": {
+      "Fn::Equals": [
+        {
+          "Ref": "DynamoDBEnableServerSideEncryption"
+        },
+        "true"
+      ]
+    },
+    "ShouldUsePayPerRequestBilling": {
+      "Fn::Equals": [
+        {
+          "Ref": "DynamoDBBillingMode"
+        },
+        "PAY_PER_REQUEST"
+      ]
+    },
+    "ShouldUsePointInTimeRecovery": {
+      "Fn::Equals": [
+        {
+          "Ref": "DynamoDBEnablePointInTimeRecovery"
+        },
+        "true"
+      ]
+    }
+  },
+  "Resources": {
+    "DomainTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH"
+          }
+        ],
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "customer_id",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "client_id",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "gateway_id",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "gateway_rental_id",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "analyzer_id",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "analyzer_rental_id",
+            "AttributeType": "S"
+          }
+        ],
+        "BillingMode": {
+          "Fn::If": [
+            "ShouldUsePayPerRequestBilling",
+            "PAY_PER_REQUEST",
+            {
+              "Ref": "AWS::NoValue"
+            }
+          ]
+        },
+        "GlobalSecondaryIndexes": [
+          {
+            "IndexName": "byDomainByCustomer",
+            "KeySchema": [
+              {
+                "AttributeName": "customer_id",
+                "KeyType": "HASH"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+              "Fn::If": [
+                "ShouldUsePayPerRequestBilling",
+                {
+                  "Ref": "AWS::NoValue"
+                },
+                {
+                  "ReadCapacityUnits": {
+                    "Ref": "DynamoDBModelTableReadIOPS"
+                  },
+                  "WriteCapacityUnits": {
+                    "Ref": "DynamoDBModelTableWriteIOPS"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "IndexName": "byDomainByClient",
+            "KeySchema": [
+              {
+                "AttributeName": "client_id",
+                "KeyType": "HASH"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+              "Fn::If": [
+                "ShouldUsePayPerRequestBilling",
+                {
+                  "Ref": "AWS::NoValue"
+                },
+                {
+                  "ReadCapacityUnits": {
+                    "Ref": "DynamoDBModelTableReadIOPS"
+                  },
+                  "WriteCapacityUnits": {
+                    "Ref": "DynamoDBModelTableWriteIOPS"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "IndexName": "byDomainByGateway",
+            "KeySchema": [
+              {
+                "AttributeName": "gateway_id",
+                "KeyType": "HASH"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+              "Fn::If": [
+                "ShouldUsePayPerRequestBilling",
+                {
+                  "Ref": "AWS::NoValue"
+                },
+                {
+                  "ReadCapacityUnits": {
+                    "Ref": "DynamoDBModelTableReadIOPS"
+                  },
+                  "WriteCapacityUnits": {
+                    "Ref": "DynamoDBModelTableWriteIOPS"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "IndexName": "byDomainByGatewayrRental",
+            "KeySchema": [
+              {
+                "AttributeName": "gateway_rental_id",
+                "KeyType": "HASH"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+              "Fn::If": [
+                "ShouldUsePayPerRequestBilling",
+                {
+                  "Ref": "AWS::NoValue"
+                },
+                {
+                  "ReadCapacityUnits": {
+                    "Ref": "DynamoDBModelTableReadIOPS"
+                  },
+                  "WriteCapacityUnits": {
+                    "Ref": "DynamoDBModelTableWriteIOPS"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "IndexName": "byDomainByAnalyzer",
+            "KeySchema": [
+              {
+                "AttributeName": "analyzer_id",
+                "KeyType": "HASH"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+              "Fn::If": [
+                "ShouldUsePayPerRequestBilling",
+                {
+                  "Ref": "AWS::NoValue"
+                },
+                {
+                  "ReadCapacityUnits": {
+                    "Ref": "DynamoDBModelTableReadIOPS"
+                  },
+                  "WriteCapacityUnits": {
+                    "Ref": "DynamoDBModelTableWriteIOPS"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "IndexName": "byDomainByAnalyzerRental",
+            "KeySchema": [
+              {
+                "AttributeName": "analyzer_rental_id",
+                "KeyType": "HASH"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+              "Fn::If": [
+                "ShouldUsePayPerRequestBilling",
+                {
+                  "Ref": "AWS::NoValue"
+                },
+                {
+                  "ReadCapacityUnits": {
+                    "Ref": "DynamoDBModelTableReadIOPS"
+                  },
+                  "WriteCapacityUnits": {
+                    "Ref": "DynamoDBModelTableWriteIOPS"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "PointInTimeRecoverySpecification": {
+          "Fn::If": [
+            "ShouldUsePointInTimeRecovery",
+            {
+              "PointInTimeRecoveryEnabled": true
+            },
+            {
+              "Ref": "AWS::NoValue"
+            }
+          ]
+        },
+        "ProvisionedThroughput": {
+          "Fn::If": [
+            "ShouldUsePayPerRequestBilling",
+            {
+              "Ref": "AWS::NoValue"
+            },
+            {
+              "ReadCapacityUnits": {
+                "Ref": "DynamoDBModelTableReadIOPS"
+              },
+              "WriteCapacityUnits": {
+                "Ref": "DynamoDBModelTableWriteIOPS"
+              }
+            }
+          ]
+        },
+        "SSESpecification": {
+          "SSEEnabled": {
+            "Fn::If": [
+              "ShouldUseServerSideEncryption",
+              true,
+              false
+            ]
+          }
+        },
+        "StreamSpecification": {
+          "StreamViewType": "NEW_AND_OLD_IMAGES"
+        },
+        "TableName": {
+          "Fn::Join": [
+            "",
+            [
+              "Domain-",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "-",
+              {
+                "Ref": "referencetotransformerrootstackenv10C5A902Ref"
+              }
+            ]
+          ]
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete"
+    },
+    "DomainIAMRole8C11F794": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "appsync.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "RoleName": {
+          "Fn::Join": [
+            "",
+            [
+              "DomainIAMRole25716d-",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "-",
+              {
+                "Ref": "referencetotransformerrootstackenv10C5A902Ref"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "DomainIAMRoleDefaultPolicyA49EA544": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "DomainTable",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "DomainTable",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "DomainIAMRoleDefaultPolicyA49EA544",
+        "Roles": [
+          {
+            "Ref": "DomainIAMRole8C11F794"
+          }
+        ]
+      }
+    },
+    "DynamoDBAccess71ABE5AE": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:UpdateItem"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Sub": [
+                    "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tablename}",
+                    {
+                      "tablename": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "Domain-",
+                            {
+                              "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+                            },
+                            "-",
+                            {
+                              "Ref": "referencetotransformerrootstackenv10C5A902Ref"
+                            }
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Fn::Sub": [
+                    "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tablename}/*",
+                    {
+                      "tablename": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "Domain-",
+                            {
+                              "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+                            },
+                            "-",
+                            {
+                              "Ref": "referencetotransformerrootstackenv10C5A902Ref"
+                            }
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "DynamoDBAccess71ABE5AE",
+        "Roles": [
+          {
+            "Ref": "DomainIAMRole8C11F794"
+          }
+        ]
+      }
+    },
+    "DomainDataSource": {
+      "Type": "AWS::AppSync::DataSource",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "Name": "DomainTable",
+        "Type": "AMAZON_DYNAMODB",
+        "DynamoDBConfig": {
+          "AwsRegion": {
+            "Ref": "AWS::Region"
+          },
+          "TableName": {
+            "Ref": "DomainTable"
+          }
+        },
+        "ServiceRoleArn": {
+          "Fn::GetAtt": [
+            "DomainIAMRole8C11F794",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "DomainIAMRole8C11F794"
+      ]
+    },
+    "QueryGetDomainDataResolverFnQueryGetDomainDataResolverFnAppSyncFunction3024BDBB": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "DomainDataSource",
+            "Name"
+          ]
+        },
+        "Name": "QueryGetDomainDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getDomain.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getDomain.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "DomainDataSource"
+      ]
+    },
+    "GetDomainResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "getDomain",
+        "TypeName": "Query",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpreAuth0FunctionQuerygetCustomerpreAuth0FunctionAppSyncFunction810B798FFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackPSFileNestedStackPSFileNestedStackResource46845FB7OutputstransformerrootstackPSFileQuerygetPSFileauth0FunctionQuerygetPSFileauth0FunctionAppSyncFunction901BA9DAFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "QueryGetDomainDataResolverFnQueryGetDomainDataResolverFnAppSyncFunction3024BDBB",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"getDomain\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "DomainTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "QueryListDomainsDataResolverFnQueryListDomainsDataResolverFnAppSyncFunction992837F0": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "DomainDataSource",
+            "Name"
+          ]
+        },
+        "Name": "QueryListDomainsDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.listDomains.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.listDomains.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "DomainDataSource"
+      ]
+    },
+    "ListDomainResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "listDomains",
+        "TypeName": "Query",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerylistCustomerspreAuth0FunctionQuerylistCustomerspreAuth0FunctionAppSyncFunction020ECEA0FunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackPSFileNestedStackPSFileNestedStackResource46845FB7OutputstransformerrootstackPSFileQuerygetPSFileauth0FunctionQuerygetPSFileauth0FunctionAppSyncFunction901BA9DAFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "QueryListDomainsDataResolverFnQueryListDomainsDataResolverFnAppSyncFunction992837F0",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"listDomains\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "DomainTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "MutationcreateDomainauth0FunctionMutationcreateDomainauth0FunctionAppSyncFunction2B76476E": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Ref": "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name"
+        },
+        "Name": "MutationcreateDomainauth0Function",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.createDomain.auth.1.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson({})"
+      }
+    },
+    "MutationCreateDomainDataResolverFnMutationCreateDomainDataResolverFnAppSyncFunctionA83F991D": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "DomainDataSource",
+            "Name"
+          ]
+        },
+        "Name": "MutationCreateDomainDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.createDomain.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.createDomain.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "DomainDataSource"
+      ]
+    },
+    "CreateDomainResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "createDomain",
+        "TypeName": "Mutation",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationcreateCustomerinit0FunctionMutationcreateCustomerinit0FunctionAppSyncFunctionD03D5B32FunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationcreateCustomerpreAuth0FunctionMutationcreateCustomerpreAuth0FunctionAppSyncFunctionB11EC148FunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "MutationcreateDomainauth0FunctionMutationcreateDomainauth0FunctionAppSyncFunction2B76476E",
+                "FunctionId"
+              ]
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "MutationCreateDomainDataResolverFnMutationCreateDomainDataResolverFnAppSyncFunctionA83F991D",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Mutation\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"createDomain\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "DomainTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "MutationupdateDomainauth0FunctionMutationupdateDomainauth0FunctionAppSyncFunctionAD35AAFE": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "DomainDataSource",
+            "Name"
+          ]
+        },
+        "Name": "MutationupdateDomainauth0Function",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.updateDomain.auth.1.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.updateDomain.auth.1.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "DomainDataSource"
+      ]
+    },
+    "MutationUpdateDomainDataResolverFnMutationUpdateDomainDataResolverFnAppSyncFunctionE58FE8B9": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "DomainDataSource",
+            "Name"
+          ]
+        },
+        "Name": "MutationUpdateDomainDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.updateDomain.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.updateDomain.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "DomainDataSource"
+      ]
+    },
+    "UpdateDomainResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "updateDomain",
+        "TypeName": "Mutation",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationupdateCustomerinit0FunctionMutationupdateCustomerinit0FunctionAppSyncFunction06D4D55BFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationcreateCustomerpreAuth0FunctionMutationcreateCustomerpreAuth0FunctionAppSyncFunctionB11EC148FunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "MutationupdateDomainauth0FunctionMutationupdateDomainauth0FunctionAppSyncFunctionAD35AAFE",
+                "FunctionId"
+              ]
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "MutationUpdateDomainDataResolverFnMutationUpdateDomainDataResolverFnAppSyncFunctionE58FE8B9",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Mutation\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"updateDomain\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "DomainTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "MutationdeleteDomainauth0FunctionMutationdeleteDomainauth0FunctionAppSyncFunction2436CA10": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "DomainDataSource",
+            "Name"
+          ]
+        },
+        "Name": "MutationdeleteDomainauth0Function",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.deleteDomain.auth.1.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.deleteDomain.auth.1.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "DomainDataSource"
+      ]
+    },
+    "MutationDeleteDomainDataResolverFnMutationDeleteDomainDataResolverFnAppSyncFunctionA364A1D8": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "DomainDataSource",
+            "Name"
+          ]
+        },
+        "Name": "MutationDeleteDomainDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.deleteDomain.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.deleteDomain.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "DomainDataSource"
+      ]
+    },
+    "DeleteDomainResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "deleteDomain",
+        "TypeName": "Mutation",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerMutationdeleteCustomerpreAuth0FunctionMutationdeleteCustomerpreAuth0FunctionAppSyncFunction5E0FB8A6FunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "MutationdeleteDomainauth0FunctionMutationdeleteDomainauth0FunctionAppSyncFunction2436CA10",
+                "FunctionId"
+              ]
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "MutationDeleteDomainDataResolverFnMutationDeleteDomainDataResolverFnAppSyncFunctionA364A1D8",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Mutation\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"deleteDomain\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "DomainTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "SubscriptiononCreateDomainResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "onCreateDomain",
+        "TypeName": "Subscription",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackPSFileNestedStackPSFileNestedStackResource46845FB7OutputstransformerrootstackPSFileSubscriptiononCreatePSFileauth0FunctionSubscriptiononCreatePSFileauth0FunctionAppSyncFunction15362174FunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerSubscriptionOnCreateCustomerDataResolverFnSubscriptionOnCreateCustomerDataResolverFnAppSyncFunctionD15C4663FunctionId"
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Subscription\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"onCreateDomain\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "SubscriptiononUpdateDomainResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "onUpdateDomain",
+        "TypeName": "Subscription",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackPSFileNestedStackPSFileNestedStackResource46845FB7OutputstransformerrootstackPSFileSubscriptiononCreatePSFileauth0FunctionSubscriptiononCreatePSFileauth0FunctionAppSyncFunction15362174FunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerSubscriptionOnCreateCustomerDataResolverFnSubscriptionOnCreateCustomerDataResolverFnAppSyncFunctionD15C4663FunctionId"
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Subscription\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"onUpdateDomain\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "SubscriptiononDeleteDomainResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "onDeleteDomain",
+        "TypeName": "Subscription",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackPSFileNestedStackPSFileNestedStackResource46845FB7OutputstransformerrootstackPSFileSubscriptiononCreatePSFileauth0FunctionSubscriptiononCreatePSFileauth0FunctionAppSyncFunction15362174FunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerSubscriptionOnCreateCustomerDataResolverFnSubscriptionOnCreateCustomerDataResolverFnAppSyncFunctionD15C4663FunctionId"
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Subscription\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"onDeleteDomain\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "QueryGetDomainByCustomerIdDataResolverFnQueryGetDomainByCustomerIdDataResolverFnAppSyncFunction7EBD521A": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "DomainDataSource",
+            "Name"
+          ]
+        },
+        "Name": "QueryGetDomainByCustomerIdDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getDomainByCustomerId.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getDomainByCustomerId.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "DomainDataSource"
+      ]
+    },
+    "QuerygetDomainByCustomerIdResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "getDomainByCustomerId",
+        "TypeName": "Query",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackPSFileNestedStackPSFileNestedStackResource46845FB7OutputstransformerrootstackPSFileQuerygetPSFileauth0FunctionQuerygetPSFileauth0FunctionAppSyncFunction901BA9DAFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "QueryGetDomainByCustomerIdDataResolverFnQueryGetDomainByCustomerIdDataResolverFnAppSyncFunction7EBD521A",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"getDomainByCustomerId\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "DomainTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "QueryGetDomainByClientIdDataResolverFnQueryGetDomainByClientIdDataResolverFnAppSyncFunction6A267BA0": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "DomainDataSource",
+            "Name"
+          ]
+        },
+        "Name": "QueryGetDomainByClientIdDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getDomainByClientId.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getDomainByClientId.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "DomainDataSource"
+      ]
+    },
+    "QuerygetDomainByClientIdResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "getDomainByClientId",
+        "TypeName": "Query",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackPSFileNestedStackPSFileNestedStackResource46845FB7OutputstransformerrootstackPSFileQuerygetPSFileauth0FunctionQuerygetPSFileauth0FunctionAppSyncFunction901BA9DAFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "QueryGetDomainByClientIdDataResolverFnQueryGetDomainByClientIdDataResolverFnAppSyncFunction6A267BA0",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"getDomainByClientId\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "DomainTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "QueryGetDomainByGatewayrIdDataResolverFnQueryGetDomainByGatewayrIdDataResolverFnAppSyncFunction8D021B30": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "DomainDataSource",
+            "Name"
+          ]
+        },
+        "Name": "QueryGetDomainByGatewayrIdDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getDomainByGatewayrId.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getDomainByGatewayrId.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "DomainDataSource"
+      ]
+    },
+    "QuerygetDomainByGatewayrIdResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "getDomainByGatewayrId",
+        "TypeName": "Query",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackPSFileNestedStackPSFileNestedStackResource46845FB7OutputstransformerrootstackPSFileQuerygetPSFileauth0FunctionQuerygetPSFileauth0FunctionAppSyncFunction901BA9DAFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "QueryGetDomainByGatewayrIdDataResolverFnQueryGetDomainByGatewayrIdDataResolverFnAppSyncFunction8D021B30",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"getDomainByGatewayrId\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "DomainTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "QueryGetDomainByGatewayrRentalIdDataResolverFnQueryGetDomainByGatewayrRentalIdDataResolverFnAppSyncFunctionD9F90C08": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "DomainDataSource",
+            "Name"
+          ]
+        },
+        "Name": "QueryGetDomainByGatewayrRentalIdDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getDomainByGatewayrRentalId.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getDomainByGatewayrRentalId.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "DomainDataSource"
+      ]
+    },
+    "QuerygetDomainByGatewayrRentalIdResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "getDomainByGatewayrRentalId",
+        "TypeName": "Query",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackPSFileNestedStackPSFileNestedStackResource46845FB7OutputstransformerrootstackPSFileQuerygetPSFileauth0FunctionQuerygetPSFileauth0FunctionAppSyncFunction901BA9DAFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "QueryGetDomainByGatewayrRentalIdDataResolverFnQueryGetDomainByGatewayrRentalIdDataResolverFnAppSyncFunctionD9F90C08",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"getDomainByGatewayrRentalId\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "DomainTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "QueryGetDomainByAnalyzerIdDataResolverFnQueryGetDomainByAnalyzerIdDataResolverFnAppSyncFunction35CB53DF": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "DomainDataSource",
+            "Name"
+          ]
+        },
+        "Name": "QueryGetDomainByAnalyzerIdDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getDomainByAnalyzerId.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getDomainByAnalyzerId.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "DomainDataSource"
+      ]
+    },
+    "QuerygetDomainByAnalyzerIdResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "getDomainByAnalyzerId",
+        "TypeName": "Query",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackPSFileNestedStackPSFileNestedStackResource46845FB7OutputstransformerrootstackPSFileQuerygetPSFileauth0FunctionQuerygetPSFileauth0FunctionAppSyncFunction901BA9DAFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "QueryGetDomainByAnalyzerIdDataResolverFnQueryGetDomainByAnalyzerIdDataResolverFnAppSyncFunction35CB53DF",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"getDomainByAnalyzerId\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "DomainTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "QueryGetDomainByAnalyzerRentalIdDataResolverFnQueryGetDomainByAnalyzerRentalIdDataResolverFnAppSyncFunctionB0AC5891": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "DomainDataSource",
+            "Name"
+          ]
+        },
+        "Name": "QueryGetDomainByAnalyzerRentalIdDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getDomainByAnalyzerRentalId.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.getDomainByAnalyzerRentalId.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "DomainDataSource"
+      ]
+    },
+    "QuerygetDomainByAnalyzerRentalIdResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "getDomainByAnalyzerRentalId",
+        "TypeName": "Query",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackPSFileNestedStackPSFileNestedStackResource46845FB7OutputstransformerrootstackPSFileQuerygetPSFileauth0FunctionQuerygetPSFileauth0FunctionAppSyncFunction901BA9DAFunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerQuerygetCustomerpostAuth0FunctionQuerygetCustomerpostAuth0FunctionAppSyncFunction346CD89CFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "QueryGetDomainByAnalyzerRentalIdDataResolverFnQueryGetDomainByAnalyzerRentalIdDataResolverFnAppSyncFunctionB0AC5891",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"getDomainByAnalyzerRentalId\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "DomainTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "DomainownerResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "owner",
+        "TypeName": "Domain",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackCustomerNestedStackCustomerNestedStackResource1286005COutputstransformerrootstackCustomerCustomerOwnerDataResolverFnCustomerOwnerDataResolverFnAppSyncFunction30F2FF37FunctionId"
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Domain\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"owner\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:1a42955b-5b4d-4846-a56f-bd96bee2702e\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"getActiveDeviceRental-dev\"]))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    }
+  },
+  "Outputs": {
+    "GetAttDomainTableStreamArn": {
+      "Description": "Your DynamoDB table StreamArn.",
+      "Value": {
+        "Fn::GetAtt": [
+          "DomainTable",
+          "StreamArn"
+        ]
+      },
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            ":",
+            [
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "GetAtt:DomainTable:StreamArn"
+            ]
+          ]
+        }
+      }
+    },
+    "GetAttDomainTableName": {
+      "Description": "Your DynamoDB table name.",
+      "Value": {
+        "Ref": "DomainTable"
+      },
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            ":",
+            [
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "GetAtt:DomainTable:Name"
+            ]
+          ]
+        }
+      }
+    },
+    "GetAttDomainDataSourceName": {
+      "Description": "Your model DataSource name.",
+      "Value": {
+        "Fn::GetAtt": [
+          "DomainDataSource",
+          "Name"
+        ]
+      },
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            ":",
+            [
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "GetAtt:DomainDataSource:Name"
+            ]
+          ]
+        }
+      }
+    },
+    "transformerrootstackDomainDomainDataSourceBDC66ED3Name": {
+      "Value": {
+        "Fn::GetAtt": [
+          "DomainDataSource",
+          "Name"
+        ]
+      }
+    },
+    "transformerrootstackDomainDomainTable87F7344FRef": {
+      "Value": {
+        "Ref": "DomainTable"
+      }
+    },
+    "transformerrootstackDomainDomainTable87F7344FStreamArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "DomainTable",
+          "StreamArn"
+        ]
+      }
+    }
+  }
+}

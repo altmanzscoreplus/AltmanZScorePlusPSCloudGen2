@@ -1,0 +1,491 @@
+{
+  "version": 1,
+  "paths": {
+    "/batchDeleteAnalyzer": {
+      "name": "/batchDeleteAnalyzer",
+      "lambdaFunction": "batchDeleteAnalyzer",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "read",
+          "update",
+          "delete"
+        ],
+        "groups": {
+          "Admin": [
+            "read",
+            "update",
+            "delete"
+          ],
+          "Client": [
+            "read",
+            "update",
+            "delete"
+          ],
+          "Customer": [
+            "read",
+            "update",
+            "delete"
+          ],
+          "AdminMaster": [
+            "read",
+            "update",
+            "delete"
+          ]
+        }
+      }
+    },
+    "/batchDeleteCustomer": {
+      "name": "/batchDeleteCustomer",
+      "lambdaFunction": "batchDeleteCustomer",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "update",
+          "delete"
+        ],
+        "groups": {
+          "Admin": [
+            "create",
+            "update",
+            "delete"
+          ],
+          "AdminMaster": [
+            "create",
+            "read",
+            "update",
+            "delete"
+          ]
+        }
+      }
+    },
+    "/batchDeleteGateway": {
+      "name": "/batchDeleteGateway",
+      "lambdaFunction": "batchDeleteGateway",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "read",
+          "update",
+          "delete"
+        ],
+        "groups": {
+          "Admin": [
+            "read",
+            "update",
+            "delete"
+          ],
+          "Client": [
+            "read",
+            "update",
+            "delete"
+          ],
+          "Customer": [
+            "read",
+            "update",
+            "delete"
+          ],
+          "AdminMaster": [
+            "create",
+            "read",
+            "update",
+            "delete"
+          ]
+        }
+      }
+    },
+    "/getActiveDeviceRental": {
+      "name": "/getActiveDeviceRental",
+      "lambdaFunction": "getActiveDeviceRental",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "read"
+        ],
+        "groups": {
+          "Admin": [
+            "read"
+          ],
+          "Client": [
+            "read"
+          ],
+          "Customer": [
+            "read"
+          ],
+          "AdminMaster": [
+            "read"
+          ]
+        }
+      }
+    },
+    "/sendAlarm": {
+      "name": "/sendAlarm",
+      "lambdaFunction": "sendAlarm",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create"
+        ],
+        "groups": {
+          "Admin": [
+            "create"
+          ],
+          "Client": [
+            "create"
+          ],
+          "Customer": [
+            "create"
+          ],
+          "AdminMaster": [
+            "create"
+          ],
+          "ClientMaster": [
+            "create"
+          ],
+          "CustomerMaster": [
+            "create"
+          ]
+        }
+      }
+    },
+    "/sendEMail": {
+      "name": "/sendEMail",
+      "lambdaFunction": "sendEMail",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create"
+        ],
+        "groups": {
+          "Admin": [
+            "create"
+          ],
+          "Client": [
+            "create"
+          ],
+          "Customer": [
+            "create"
+          ],
+          "AdminMaster": [
+            "create"
+          ],
+          "ClientMaster": [
+            "create"
+          ],
+          "CustomerMaster": [
+            "create"
+          ]
+        }
+      }
+    },
+    "/sendPSFile": {
+      "name": "/sendPSFile",
+      "lambdaFunction": "updateDevice",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update"
+        ],
+        "groups": {
+          "Admin": [
+            "create",
+            "read",
+            "update"
+          ],
+          "Client": [
+            "create",
+            "read",
+            "update"
+          ],
+          "Customer": [
+            "create",
+            "read",
+            "update"
+          ],
+          "AdminMaster": [
+            "create",
+            "read",
+            "update"
+          ]
+        }
+      }
+    },
+    "/updateDevice": {
+      "name": "/updateDevice",
+      "lambdaFunction": "updateDevice",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update"
+        ],
+        "groups": {
+          "Admin": [
+            "create",
+            "read",
+            "update"
+          ],
+          "Client": [
+            "create",
+            "read",
+            "update"
+          ],
+          "Customer": [
+            "create",
+            "read",
+            "update"
+          ],
+          "AdminMaster": [
+            "create",
+            "read",
+            "update"
+          ]
+        }
+      }
+    },
+    "/getAutoIncrementedID": {
+      "name": "/getAutoIncrementedID",
+      "lambdaFunction": "getAutoIncrementedID",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "read"
+        ],
+        "groups": {
+          "Admin": [
+            "read"
+          ],
+          "Client": [
+            "read"
+          ],
+          "Customer": [
+            "create",
+            "read"
+          ],
+          "AdminMaster": [
+            "read"
+          ],
+          "ClientMaster": [
+            "read"
+          ],
+          "CustomerMaster": [
+            "read"
+          ]
+        }
+      }
+    },
+    "/getFileNames": {
+      "name": "/getFileNames",
+      "lambdaFunction": "getFileNames",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "read",
+          "delete"
+        ],
+        "groups": {
+          "Admin": [
+            "read",
+            "delete"
+          ],
+          "Client": [
+            "read"
+          ],
+          "Customer": [
+            "read"
+          ],
+          "AdminMaster": [
+            "read",
+            "delete"
+          ],
+          "ClientMaster": [
+            "read"
+          ],
+          "CustomerMaster": [
+            "read"
+          ]
+        }
+      }
+    },
+    "/IoTShadow/createShadow": {
+      "name": "/IoTShadow/createShadow",
+      "lambdaFunction": "IoTShadow",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/IoTShadow/deleteShadow": {
+      "name": "/IoTShadow/deleteShadow",
+      "lambdaFunction": "IoTShadow",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/IoTShadow/getShadow": {
+      "name": "/IoTShadow/getShadow",
+      "lambdaFunction": "IoTShadow",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/IoTShadow/listNamedShadows": {
+      "name": "/IoTShadow/listNamedShadows",
+      "lambdaFunction": "IoTShadow",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/IoTShadow/updateShadow": {
+      "name": "/IoTShadow/updateShadow",
+      "lambdaFunction": "IoTShadow",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/IoTShadow/AddToWhitelist": {
+      "name": "/IoTShadow/AddToWhitelist",
+      "lambdaFunction": "IoTShadow",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "update"
+        ],
+        "groups": {
+          "Admin": [
+            "create",
+            "update"
+          ],
+          "AdminMaster": [
+            "create",
+            "update"
+          ]
+        }
+      }
+    },
+    "/IoTShadow/RemoveFromWhitelist": {
+      "name": "/IoTShadow/RemoveFromWhitelist",
+      "lambdaFunction": "IoTShadow",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "update",
+          "delete"
+        ],
+        "groups": {
+          "Admin": [
+            "create",
+            "update",
+            "delete"
+          ],
+          "AdminMaster": [
+            "create",
+            "update",
+            "delete"
+          ]
+        }
+      }
+    },
+    "/upgradeFirmware": {
+      "name": "/upgradeFirmware",
+      "lambdaFunction": "upgradeFirmware",
+      "permissions": {
+        "groups": {
+          "Admin": [
+            "create"
+          ]
+        },
+        "setting": "private"
+      }
+    },
+    "/getFirmwareFileNames": {
+      "name": "/getFirmwareFileNames",
+      "lambdaFunction": "getFirmwareFileNames",
+      "permissions": {
+        "groups": {
+          "Admin": [
+            "read"
+          ]
+        },
+        "setting": "private"
+      }
+    },
+    "/s3/get-object": {
+      "name": "/s3/get-object",
+      "lambdaFunction": "s3",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "read"
+        ]
+      }
+    },
+    "/s3/delete-object": {
+      "name": "/s3/delete-object",
+      "lambdaFunction": "s3",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "delete"
+        ]
+      }
+    },
+    "/s3/get-object-tagging": {
+      "name": "/s3/get-object-tagging",
+      "lambdaFunction": "s3",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "read"
+        ]
+      }
+    },
+    "/s3/put-object-tagging": {
+      "name": "/s3/put-object-tagging",
+      "lambdaFunction": "s3",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "update"
+        ]
+      }
+    },
+    "/s3/get-signed-url": {
+      "name": "/s3/get-signed-url",
+      "lambdaFunction": "s3",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "read"
+        ]
+      }
+    },
+    "/s3/head-object": {
+      "name": "/s3/head-object",
+      "lambdaFunction": "s3",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "read"
+        ]
+      }
+    },
+    "/s3/put-object": {
+      "name": "/s3/put-object",
+      "lambdaFunction": "s3",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "update"
+        ]
+      }
+    }
+  }
+}

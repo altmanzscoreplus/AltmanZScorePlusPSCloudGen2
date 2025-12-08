@@ -1,0 +1,17 @@
+{
+  "name": "opensearch-sync",
+  "version": "1.0.0",
+  "description": "Lambda function to sync DynamoDB changes to OpenSearch",
+  "main": "handler.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@opensearch-project/opensearch": "^2.5.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.136",
+    "typescript": "^5.3.3"
+  }
+}

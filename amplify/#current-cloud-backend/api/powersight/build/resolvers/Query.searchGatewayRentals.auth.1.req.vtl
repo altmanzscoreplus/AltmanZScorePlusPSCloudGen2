@@ -1,0 +1,58 @@
+## [Start] Authorization Steps. **
+$util.qr($ctx.stash.put("hasAuth", true))
+#set( $isAuthorized = false )
+#set( $totalFields = ["id","ownership_type","gateway_id","customer_id","client_id","ref_order","termination_date","room","site","gateway","customer","client","reading","ps_file","domain","owner","end_date","access_end_date","createdAt","updatedAt"] )
+#set( $allowedAggFields = ["createdAt","updatedAt","id","ownership_type","gateway_id","customer_id","client_id","ref_order","termination_date","room","site","gateway","customer","client","reading","ps_file","domain","owner","end_date","access_end_date"] )
+#if( $util.authType() == "User Pool Authorization" )
+  #set( $allowedAggFields = $totalFields )
+  #set( $isAuthorized = true )
+  #if( !$isAuthorized )
+    #set( $staticGroupRoles = [{"claim":"cognito:groups","entity":"Admin"},{"claim":"cognito:groups","entity":"Customer"},{"claim":"cognito:groups","entity":"Client"},{"claim":"cognito:groups","entity":"CustomerMaster"},{"claim":"cognito:groups","entity":"ClientMaster"}] )
+    #foreach( $groupRole in $staticGroupRoles )
+      #set( $groupsInToken = $util.defaultIfNull($ctx.identity.claims.get($groupRole.claim), []) )
+      #if( $groupsInToken.contains($groupRole.entity) )
+        #set( $isAuthorized = true )
+        #if( $util.isNull($groupRole.allowedFields) )
+          #set( $allowedAggFields = $totalFields )
+          #break
+        #else
+          $util.qr($allowedAggFields.addAll($groupRole.allowedFields))
+        #end
+      #end
+    #end
+  #end
+  #set( $authFilterConditions = [] )
+  #set( $ownerClaim0 = $util.defaultIfNull($ctx.identity.claims.get("sub"), null) )
+  #set( $currentClaim1 = $util.defaultIfNull($ctx.identity.claims.get("username"), $util.defaultIfNull($ctx.identity.claims.get("cognito:username"), null)) )
+  #if( !$util.isNull($ownerClaim0) && !$util.isNull($currentClaim1) )
+    #set( $ownerClaim0 = "$ownerClaim0::$currentClaim1" )
+    #set( $ownerClaimsList0 = [] )
+    $util.qr($ownerClaimsList0.add($util.defaultIfNull($ctx.identity.claims.get("sub"), null)))
+    $util.qr($ownerClaimsList0.add($util.defaultIfNull($ctx.identity.claims.get("username"), $util.defaultIfNull($ctx.identity.claims.get("cognito:username"), null))))
+    $util.qr($ownerClaimsList0.add($ownerClaim0))
+    #set( $owner0 = {
+  "terms_set": {
+      "owner.keyword": {
+          "terms": $ownerClaimsList0,
+          "minimum_should_match_script": {
+              "source": "1"
+      }
+    }
+  }
+} )
+    $util.qr($authFilterConditions.add($owner0))
+  #end
+  #if( !$isAuthorized && !$authFilterConditions.isEmpty() )
+    $util.qr($ctx.stash.put("authFilter", {
+  "bool": {
+      "should": $authFilterConditions
+  }
+}))
+  #end
+#end
+$util.qr($ctx.stash.put("allowedAggFields", $allowedAggFields))
+#if( !$isAuthorized && $util.isNull($ctx.stash.authFilter) )
+$util.unauthorized()
+#end
+$util.toJson({"version":"2018-05-29","payload":{}})
+## [End] Authorization Steps. **

@@ -1,0 +1,12 @@
+{
+  "AppSyncApiName": "powersight",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authpowersight0b720405",
+      "Outputs.UserPoolId"
+    ]
+  },
+  "AuthModeLastUpdated": "2024-01-22T15:37:12.100Z"
+}

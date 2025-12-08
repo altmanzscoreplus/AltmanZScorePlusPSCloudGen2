@@ -1,0 +1,13 @@
+{
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "senderEMail",
+      "environmentVariableName": "senderEMail"
+    },
+    {
+      "cloudFormationParameterName": "tableName",
+      "environmentVariableName": "TABLE_NAME"
+    }
+  ]
+}

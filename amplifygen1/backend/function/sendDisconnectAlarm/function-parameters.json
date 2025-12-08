@@ -1,0 +1,89 @@
+{
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "tableName",
+      "environmentVariableName": "TABLE_NAME"
+    },
+    {
+      "cloudFormationParameterName": "sesRecipientEmail",
+      "environmentVariableName": "SES_RECIPIENT_EMAIL"
+    },
+    {
+      "cloudFormationParameterName": "dedupTableName",
+      "environmentVariableName": "DEDUP_TABLE_NAME"
+    },
+    {
+      "cloudFormationParameterName": "emailAlertSentTable",
+      "environmentVariableName": "EMAIL_ALERT_SENT_TABLE"
+    },
+    {
+      "cloudFormationParameterName": "gatewayTable",
+      "environmentVariableName": "GATEWAY_TABLE"
+    },
+    {
+      "cloudFormationParameterName": "analyzerTable",
+      "environmentVariableName": "ANALYZER_TABLE"
+    },
+    {
+      "cloudFormationParameterName": "clientTable",
+      "environmentVariableName": "CLIENT_TABLE"
+    },
+    {
+      "cloudFormationParameterName": "customerTable",
+      "environmentVariableName": "CUSTOMER_TABLE"
+    },
+    {
+      "cloudFormationParameterName": "gatewayAlarmTable",
+      "environmentVariableName": "GATEWAY_ALARM_TABLE"
+    },
+    {
+      "cloudFormationParameterName": "analyzerAlarmTable",
+      "environmentVariableName": "ANALYZER_ALARM_TABLE"
+    },
+    {
+      "cloudFormationParameterName": "customerAlarmTable",
+      "environmentVariableName": "CUSTOMER_ALARM_TABLE"
+    },
+    {
+      "cloudFormationParameterName": "clientAlarmTable",
+      "environmentVariableName": "CLIENT_ALARM_TABLE"
+    },
+    {
+      "cloudFormationParameterName": "pinpointAppId",
+      "environmentVariableName": "PINPOINT_APP_ID"
+    },
+    {
+      "cloudFormationParameterName": "alarmSentTable",
+      "environmentVariableName": "ALARM_SENT_TABLE"
+    },
+    {
+      "cloudFormationParameterName": "adminContactTable",
+      "environmentVariableName": "ADMIN_CONTACT_TABLE"
+    },
+    {
+      "cloudFormationParameterName": "adminAlarmLevelTable",
+      "environmentVariableName": "ADMIN_ALARM_LEVEL_TABLE"
+    },
+    {
+      "cloudFormationParameterName": "connectionTable",
+      "environmentVariableName": "CONNECTION_TABLE"
+    },
+    {
+      "cloudFormationParameterName": "pinpointRegion",
+      "environmentVariableName": "PINPOINT_REGION"
+    },
+    {
+      "cloudFormationParameterName": "originationNumber",
+      "environmentVariableName": "ORIGINATION_NUMBER"
+    },
+    {
+      "cloudFormationParameterName": "alarmMessageTable",
+      "environmentVariableName": "ALARM_MESSAGE_TABLE"
+    },
+    {
+      "cloudFormationParameterName": "globalAlarmTable",
+      "environmentVariableName": "GLOBAL_ALARM_TABLE"
+    }
+  ]
+}

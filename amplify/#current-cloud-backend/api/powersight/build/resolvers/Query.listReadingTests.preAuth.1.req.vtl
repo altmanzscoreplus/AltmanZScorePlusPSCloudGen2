@@ -1,0 +1,62 @@
+## [Start] Set query expression for key **
+#if( $util.isNull($ctx.args.analyzer_id) && !$util.isNull($ctx.args.sortDirection) )
+  $util.error("When providing argument 'sortDirection' you must also provide argument 'analyzer_id'.", "InvalidArgumentsError")
+#end
+#set( $modelQueryExpression = {} )
+## [Start] Validate key arguments. **
+#if( !$util.isNull($ctx.args.createdAt) && $util.isNull($ctx.args.analyzer_id) )
+  $util.error("When providing argument 'createdAt' you must also provide arguments analyzer_id", "InvalidArgumentsError")
+#end
+## [End] Validate key arguments. **
+#if( !$util.isNull($ctx.args.analyzer_id) )
+  #set( $modelQueryExpression.expression = "#analyzer_id = :analyzer_id" )
+  #set( $modelQueryExpression.expressionNames = {
+  "#analyzer_id": "analyzer_id"
+} )
+  #set( $modelQueryExpression.expressionValues = {
+  ":analyzer_id": {
+      "S": "$ctx.args.analyzer_id"
+  }
+} )
+#end
+## [Start] Applying Key Condition **
+#if( !$util.isNull($ctx.args.createdAt) && !$util.isNull($ctx.args.createdAt.beginsWith) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND begins_with(#sortKey, :sortKey)" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "createdAt"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$ctx.args.createdAt.beginsWith" }))
+#end
+#if( !$util.isNull($ctx.args.createdAt) && !$util.isNull($ctx.args.createdAt.between) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey BETWEEN :sortKey0 AND :sortKey1" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "createdAt"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey0", { "S": "$ctx.args.createdAt.between[0]" }))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey1", { "S": "$ctx.args.createdAt.between[1]" }))
+#end
+#if( !$util.isNull($ctx.args.createdAt) && !$util.isNull($ctx.args.createdAt.eq) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey = :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "createdAt"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$ctx.args.createdAt.eq" }))
+#end
+#if( !$util.isNull($ctx.args.createdAt) && !$util.isNull($ctx.args.createdAt.lt) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey < :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "createdAt"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$ctx.args.createdAt.lt" }))
+#end
+#if( !$util.isNull($ctx.args.createdAt) && !$util.isNull($ctx.args.createdAt.le) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey <= :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "createdAt"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$ctx.args.createdAt.le" }))
+#end
+#if( !$util.isNull($ctx.args.createdAt) && !$util.isNull($ctx.args.createdAt.gt) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey > :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "createdAt"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$ctx.args.createdAt.gt" }))
+#end
+#if( !$util.isNull($ctx.args.createdAt) && !$util.isNull($ctx.args.createdAt.ge) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey >= :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "createdAt"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$ctx.args.createdAt.ge" }))
+#end
+## [End] Applying Key Condition **
+## [End] Set query expression for key **
+$util.qr($ctx.stash.put("modelQueryExpression", $modelQueryExpression))
+{}

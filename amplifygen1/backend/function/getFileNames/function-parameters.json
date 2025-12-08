@@ -1,0 +1,13 @@
+{
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "tableSuffix",
+      "environmentVariableName": "TABLE_SUFFIX"
+    },
+    {
+      "cloudFormationParameterName": "s3BucketName",
+      "environmentVariableName": "S3_BUCKET_NAME"
+    }
+  ]
+}
