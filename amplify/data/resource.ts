@@ -354,12 +354,21 @@ const schema = a.schema({
       allow.authenticated()
     ]),
 
-  Events: a
-    .model({
-      eventID: a.string().required(),
-      epochTime: a.integer(),
-    }),
+Events: a
+  .model({
+    eventID: a.string().required(),
+    epochTime: a.integer(),
+  })
 
+  .authorization((allow) => [
+    allow.owner(),
+    allow.groups(['Admin', 'AdminMaster']),
+    allow.groups(['Customer', 'Client', 'CustomerMaster', 'ClientMaster']).to(['read', 'create', 'update']),
+    allow.authenticated()
+  ]),
+
+
+    
   AutoIncrementedId: a
     .model({
       table: a.ref('TableType').required(),
@@ -466,9 +475,11 @@ const schema = a.schema({
       alarm_interval: a.integer(),
       alarm_level: a.ref('AlarmLevelType'),
     })
+
     .secondaryIndexes((index) => [
       index('client_id').name('byClientAlarmLevelAndIntervalByClientId').queryField('getClientAlarmLevelAndIntervalByClientId'),
     ])
+
     .authorization((allow) => [
       allow.owner(),
       allow.groups(['Admin']),
@@ -516,6 +527,7 @@ const schema = a.schema({
       alarm_level: a.ref('AlarmLevelType'),
       device_type: a.ref('TableType'),
     })
+    
     .authorization((allow) => [
       allow.owner(),
       allow.groups(['Admin']),

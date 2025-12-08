@@ -1,0 +1,22 @@
+# Amplify Gen 2
+.amplify/
+node_modules/
+dist/
+build/
+
+# Environment
+.env
+.env.local
+
+# TypeScript
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

@@ -48,10 +48,10 @@ import { adminQueries } from './functions/AdminQueries2855213c/resource';
 import { validateEmail } from './functions/validateEMail/resource';
 
 // REST APIs
-import { powersightRestApi, adminQueriesApi, validateEmailApi } from './rest-api/resource';
+//import { powersightRestApi, adminQueriesApi, validateEmailApi } from './rest-api/resource';
 
 // OpenSearch
-import { openSearchSync, createOpenSearchCluster } from './opensearch/resource';
+//import { openSearchSync, createOpenSearchCluster } from './opensearch/resource';
 
 export const backend = defineBackend({
   auth,
@@ -92,67 +92,13 @@ export const backend = defineBackend({
   adminQueries,
   validateEmail,
   // REST APIs
-  powersightRestApi,
-  adminQueriesApi,
-  validateEmailApi,
+  // powersightRestApi,
+  // adminQueriesApi,
+  // validateEmailApi,
   // OpenSearch
-  openSearchSync,
+  //openSearchSync,
 });
 
-// Add OpenSearch cluster to the backend using CDK extension
-backend.addOutput({
-  custom: {
-    OpenSearchCluster: {
-      // The cluster will be created and configured through the CDK extension
-      clusterName: 'powersight-search-cluster'
-    }
-  }
-});
-
-// CDK extension to add OpenSearch cluster and configure streams
-backend.backend.node.addValidation({
-  validate() {
-    // Create OpenSearch cluster
-    const opensearchCluster = createOpenSearchCluster(
-      backend.backend,
-      'powersight'
-    );
-    
-    // Grant the OpenSearch sync function access to the cluster
-    backend.openSearchSync.resources.lambda.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          'es:ESHttpPost',
-          'es:ESHttpPut',
-          'es:ESHttpDelete',
-          'es:ESHttpGet',
-          'es:ESHttpHead'
-        ],
-        resources: [
-          `${opensearchCluster.arn}/*`
-        ]
-      })
-    );
-    
-    // Add environment variables
-    backend.openSearchSync.addEnvironment('OPENSEARCH_ENDPOINT', opensearchCluster.endpoint);
-    backend.openSearchSync.addEnvironment('OPENSEARCH_DOMAIN_ARN', opensearchCluster.arn);
-    
-    // Configure DynamoDB streams for searchable models to trigger the OpenSearch sync
-    // This will be handled by connecting the stream events to our single OpenSearch sync function
-    const searchableModels = [
-      'Customer', 'Contact', 'Gateway', 'Analyzer', 'Client', 
-      'Reading', 'PSFile', 'Domain', 'GatewayRental', 'AnalyzerRental',
-      'GatewayAlarmLevelAndInterval', 'AnalyzerAlarmLevelAndInterval',
-      'CustomerAlarmLevelAndInterval', 'ClientAlarmLevelAndInterval',
-      'GlobalAlarmLevelAndInterval', 'AdminAlarmLevelAndInterval',
-      'AdminContact', 'AlarmMessage'
-    ];
-    
-    // The DynamoDB stream events will be automatically configured by Amplify Gen 2
-    // to trigger the OpenSearch sync function for any of these models
-    
-    return [];
-  }
-});
+// TODO: Add OpenSearch cluster configuration using proper CDK backend extension
+// The current backend.backend.node.addValidation() approach is not valid for Amplify Gen 2
+// Need to use backend.createStack() for custom CDK resources

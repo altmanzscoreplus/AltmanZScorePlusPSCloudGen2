@@ -1,5 +1,12 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 
+interface EmailValidationDetails {
+  format: boolean;
+  domain: string | null;
+  localPart: string | null;
+  isCommonDomain?: boolean; // optional because before validation it's not set
+}
+
 export const handler: APIGatewayProxyHandler = async (event) => {
   try {
     console.log('Validate email event:', JSON.stringify(event, null, 2));
@@ -25,21 +32,24 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isValid = emailRegex.test(email);
 
-    // Additional validation can be added here:
-    // - Check against disposable email domains
-    // - DNS MX record validation
-    // - Integration with email validation services
-
-    let validationDetails = {
+    // Build validation details object using the interface
+    let validationDetails: EmailValidationDetails = {
       format: isValid,
       domain: isValid ? email.split('@')[1] : null,
       localPart: isValid ? email.split('@')[0] : null
     };
 
     // Basic domain validation
-    if (isValid) {
-      const domain = email.split('@')[1];
-      const commonDomains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'aol.com'];
+    if (isValid && validationDetails.domain) {
+      const domain = validationDetails.domain;
+      const commonDomains = [
+        'gmail.com',
+        'yahoo.com',
+        'outlook.com',
+        'hotmail.com',
+        'aol.com'
+      ];
+
       validationDetails = {
         ...validationDetails,
         isCommonDomain: commonDomains.includes(domain.toLowerCase())

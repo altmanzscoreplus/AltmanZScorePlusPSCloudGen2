@@ -1,0 +1,25 @@
+{
+  "name": "newscopilot-gen2-backend",
+  "version": "2.0.0",
+  "description": "NewsCopilot Backend - Amplify Gen 2 with Node.js 22",
+  "type": "module",
+  "scripts": {
+    "dev": "ampx sandbox",
+    "deploy": "ampx deploy",
+    "delete-sandbox": "ampx sandbox delete",
+    "config": "ampx configure profile",
+    "logs": "ampx sandbox --logs"
+  },
+  "dependencies": {
+    "aws-amplify": "^6.0.0",
+    "@aws-amplify/backend": "^1.0.0",
+    "@aws-amplify/backend-cli": "^1.0.0"
+  },
+  "devDependencies": {
+    "@aws-amplify/backend": "^1.0.0",
+    "@aws-amplify/backend-cli": "^1.0.0",
+    "typescript": "^5.3.0",
+    "tsx": "^4.7.0",
+    "@types/node": "^22.0.0"
+  }
+}

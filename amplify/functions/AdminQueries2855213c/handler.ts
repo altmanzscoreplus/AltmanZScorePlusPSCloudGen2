@@ -216,19 +216,12 @@ async function handleListGroups(params: any) {
   const command = new ListGroupsCommand({
     UserPoolId: userPoolId,
     Limit: params?.limit ? parseInt(params.limit) : 25,
-    PaginationToken: params?.token
+    NextToken: params?.token
   });
 
   const result = await cognitoClient.send(command);
-  
-  // Rename to NextToken for consistency
-  const response = {
-    ...result,
-    NextToken: result.PaginationToken
-  };
-  delete response.PaginationToken;
-  
-  return response;
+
+  return result;
 }
 
 async function handleAddUserToGroup(body: any) {

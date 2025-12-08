@@ -62,12 +62,8 @@ export const handler: DynamoDBStreamHandler = async (event) => {
       }
     }
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: 'IoT gateway updates processed successfully'
-      })
-    };
+    // DynamoDBStreamHandler should return void or DynamoDBBatchResponse
+    return;
 
   } catch (error) {
     console.error('Error updating IoT data for gateway:', error);

@@ -69,11 +69,15 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    // Send alerts
-    const results = await sendAlerts(alertRequest, finalRecipients);
+    // Send alerts - normalize recipients to ensure arrays are always present
+    const normalizedRecipients = {
+      emails: finalRecipients.emails || [],
+      phones: finalRecipients.phones || []
+    };
+    const results = await sendAlerts(alertRequest, normalizedRecipients);
 
     // Log alert for tracking
-    await logAlert(alertRequest, finalRecipients, results);
+    await logAlert(alertRequest, normalizedRecipients, results);
 
     return {
       statusCode: 200,

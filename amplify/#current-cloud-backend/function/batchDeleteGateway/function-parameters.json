@@ -1,9 +1,0 @@
-{
-  "lambdaLayers": [],
-  "environmentVariableList": [
-    {
-      "cloudFormationParameterName": "tableSuffix",
-      "environmentVariableName": "TABLE_SUFFIX"
-    }
-  ]
-}

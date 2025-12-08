@@ -1,9 +1,0 @@
-{
-  "lambdaLayers": [],
-  "environmentVariableList": [
-    {
-      "cloudFormationParameterName": "firmwareS3Bucket",
-      "environmentVariableName": "FIRMWARE_S3_BUCKET"
-    }
-  ]
-}
