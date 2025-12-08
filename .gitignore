@@ -1,0 +1,32 @@
+# Amplify Gen 2
+.amplify/
+node_modules/
+.env
+.env.local
+.claude/*
+relationship_analysis.txt
+bidirectional_relationship_report.txt
+# Build outputs
+dist/
+build/
+*.js.map
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Amplify Gen 1 (legacy)
+amplify/.config/
+
+# Legacy dependencies
+amplify/backend/node_modules/
