@@ -138,9 +138,67 @@ const validateEmailIntegration = new LambdaIntegration(
   backend.validateEmail.resources.lambda
 );
 
+const batchDeleteAnalyzerIntegration = new LambdaIntegration(
+  backend.batchDeleteAnalyzer.resources.lambda
+);
+
+const batchDeleteCustomerIntegration = new LambdaIntegration(
+  backend.batchDeleteCustomer.resources.lambda
+);
+
+const batchDeleteGatewayIntegration = new LambdaIntegration(
+  backend.batchDeleteGateway.resources.lambda
+);
+
+const getActiveDeviceRentalIntegration = new LambdaIntegration(
+  backend.getActiveDeviceRental.resources.lambda
+);
+
+const sendAlarmIntegration = new LambdaIntegration(
+  backend.sendAlarm.resources.lambda
+);
+
+const sendEmailIntegration = new LambdaIntegration(
+  backend.sendEMail.resources.lambda
+);
+
+const updateDeviceIntegration = new LambdaIntegration(
+  backend.updateDevice.resources.lambda
+);
+
+const getAutoIncrementedIDIntegration = new LambdaIntegration(
+  backend.getAutoIncrementedID.resources.lambda
+);
+
+const getFileNamesIntegration = new LambdaIntegration(
+  backend.getFileNames.resources.lambda
+);
+
+const iotShadowIntegration = new LambdaIntegration(
+  backend.iotShadow.resources.lambda
+);
+
+const upgradeFirmwareIntegration = new LambdaIntegration(
+  backend.upgradeFirmware.resources.lambda
+);
+
+const getFirmwareFileNamesIntegration = new LambdaIntegration(
+  backend.getFirmwareFileNames.resources.lambda
+);
+
+const s3Integration = new LambdaIntegration(
+  backend.s3.resources.lambda
+);
+
 // Add API routes with Cognito authorization
+// AdminQueries uses proxy path to handle multiple operations:
+// GET: /listUsers, /listUsersInGroup, /getUser, /listGroupsForUser, /listGroups
+// POST: /addUserToGroup, /removeUserFromGroup, /confirmUserSignUp, /disableUser,
+//       /enableUser, /createGroup, /createUser, /setUserPassword, /signUserOut
+// DELETE: /removeUserFromGroup
 const adminQueriesPath = powerSightApi.root.addResource('adminQueries');
-adminQueriesPath.addMethod('POST', adminQueriesIntegration, {
+const adminQueriesProxy = adminQueriesPath.addResource('{proxy+}');
+adminQueriesProxy.addMethod('ANY', adminQueriesIntegration, {
   authorizationType: AuthorizationType.COGNITO,
   authorizer: cognitoAuthorizer,
 });
@@ -150,6 +208,193 @@ validateEmailPath.addMethod('POST', validateEmailIntegration, {
   authorizationType: AuthorizationType.COGNITO,
   authorizer: cognitoAuthorizer,
 });
+
+// Batch Delete endpoints
+powerSightApi.root
+  .addResource('batchDeleteAnalyzer')
+  .addMethod('POST', batchDeleteAnalyzerIntegration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+powerSightApi.root
+  .addResource('batchDeleteCustomer')
+  .addMethod('POST', batchDeleteCustomerIntegration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+powerSightApi.root
+  .addResource('batchDeleteGateway')
+  .addMethod('POST', batchDeleteGatewayIntegration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+// Query endpoints
+powerSightApi.root
+  .addResource('getActiveDeviceRental')
+  .addMethod('GET', getActiveDeviceRentalIntegration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+// Email and Notification endpoints
+powerSightApi.root
+  .addResource('sendAlarm')
+  .addMethod('POST', sendAlarmIntegration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+powerSightApi.root
+  .addResource('sendEMail')
+  .addMethod('POST', sendEmailIntegration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+// Device Management endpoints
+const updateDevicePath = powerSightApi.root.addResource('updateDevice');
+updateDevicePath.addMethod('POST', updateDeviceIntegration, {
+  authorizationType: AuthorizationType.COGNITO,
+  authorizer: cognitoAuthorizer,
+});
+
+const sendPSFilePath = powerSightApi.root.addResource('sendPSFile');
+sendPSFilePath.addMethod('POST', updateDeviceIntegration, {
+  authorizationType: AuthorizationType.COGNITO,
+  authorizer: cognitoAuthorizer,
+});
+
+// Data Processing endpoints
+powerSightApi.root
+  .addResource('getAutoIncrementedID')
+  .addMethod('GET', getAutoIncrementedIDIntegration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+powerSightApi.root
+  .addResource('getFileNames')
+  .addMethod('GET', getFileNamesIntegration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+// IoT Shadow endpoints
+const iotShadowResource = powerSightApi.root.addResource('IoTShadow');
+
+iotShadowResource
+  .addResource('createShadow')
+  .addMethod('POST', iotShadowIntegration, {
+    authorizationType: AuthorizationType.NONE,
+  });
+
+iotShadowResource
+  .addResource('deleteShadow')
+  .addMethod('DELETE', iotShadowIntegration, {
+    authorizationType: AuthorizationType.NONE,
+  });
+
+iotShadowResource
+  .addResource('getShadow')
+  .addMethod('GET', iotShadowIntegration, {
+    authorizationType: AuthorizationType.NONE,
+  });
+
+iotShadowResource
+  .addResource('listNamedShadows')
+  .addMethod('GET', iotShadowIntegration, {
+    authorizationType: AuthorizationType.NONE,
+  });
+
+iotShadowResource
+  .addResource('updateShadow')
+  .addMethod('PUT', iotShadowIntegration, {
+    authorizationType: AuthorizationType.NONE,
+  });
+
+iotShadowResource
+  .addResource('AddToWhitelist')
+  .addMethod('POST', iotShadowIntegration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+iotShadowResource
+  .addResource('RemoveFromWhitelist')
+  .addMethod('DELETE', iotShadowIntegration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+// Firmware endpoints
+powerSightApi.root
+  .addResource('upgradeFirmware')
+  .addMethod('POST', upgradeFirmwareIntegration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+powerSightApi.root
+  .addResource('getFirmwareFileNames')
+  .addMethod('GET', getFirmwareFileNamesIntegration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+// S3 endpoints
+const s3Resource = powerSightApi.root.addResource('s3');
+
+s3Resource
+  .addResource('get-object')
+  .addMethod('GET', s3Integration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+s3Resource
+  .addResource('delete-object')
+  .addMethod('DELETE', s3Integration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+s3Resource
+  .addResource('get-object-tagging')
+  .addMethod('GET', s3Integration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+s3Resource
+  .addResource('put-object-tagging')
+  .addMethod('PUT', s3Integration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+s3Resource
+  .addResource('get-signed-url')
+  .addMethod('GET', s3Integration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+s3Resource
+  .addResource('head-object')
+  .addMethod('GET', s3Integration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
+
+s3Resource
+  .addResource('put-object')
+  .addMethod('PUT', s3Integration, {
+    authorizationType: AuthorizationType.COGNITO,
+    authorizer: cognitoAuthorizer,
+  });
 
 // Add API output to backend
 backend.addOutput({
