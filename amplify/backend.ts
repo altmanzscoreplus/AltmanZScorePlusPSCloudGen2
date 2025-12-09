@@ -1,5 +1,13 @@
 import { defineBackend } from '@aws-amplify/backend';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import { Stack } from 'aws-cdk-lib';
+import {
+  AuthorizationType,
+  CognitoUserPoolsAuthorizer,
+  Cors,
+  LambdaIntegration,
+  RestApi,
+} from 'aws-cdk-lib/aws-apigateway';
 import { auth } from './auth/resource';
 import { data } from './data/resource';
 import { storage } from './storage/resource';
@@ -47,13 +55,7 @@ import { addPasswordProtection } from './functions/add-password-protection/resou
 import { adminQueries } from './functions/AdminQueries2855213c/resource';
 import { validateEmail } from './functions/validateEMail/resource';
 
-// REST APIs
-//import { powersightRestApi, adminQueriesApi, validateEmailApi } from './rest-api/resource';
-
-// OpenSearch
-//import { openSearchSync, createOpenSearchCluster } from './opensearch/resource';
-
-export const backend = defineBackend({
+const backend = defineBackend({
   auth,
   data,
   storage,
@@ -91,14 +93,79 @@ export const backend = defineBackend({
   // Admin and Utility Functions
   adminQueries,
   validateEmail,
-  // REST APIs
-  // powersightRestApi,
-  // adminQueriesApi,
-  // validateEmailApi,
-  // OpenSearch
-  //openSearchSync,
+});
+
+// ============================================================================
+// REST API Configuration
+// ============================================================================
+
+// Get the stack from one of the Lambda functions
+const apiStack = Stack.of(backend.adminQueries.resources.lambda);
+
+// Create Cognito User Pool Authorizer
+const cognitoAuthorizer = new CognitoUserPoolsAuthorizer(apiStack, 'CognitoAuthorizer', {
+  cognitoUserPools: [backend.auth.resources.userPool],
+  authorizerName: 'PowerSightCognitoAuthorizer',
+});
+
+// Create REST API for PowerSight
+const powerSightApi = new RestApi(apiStack, 'PowerSightApi', {
+  restApiName: 'PowerSightApi',
+  description: 'REST API for PowerSight application',
+  deploy: true,
+  deployOptions: {
+    stageName: 'dev',
+  },
+  defaultCorsPreflightOptions: {
+    allowOrigins: Cors.ALL_ORIGINS,
+    allowMethods: Cors.ALL_METHODS,
+    allowHeaders: [
+      'Content-Type',
+      'X-Amz-Date',
+      'Authorization',
+      'X-Api-Key',
+      'X-Amz-Security-Token',
+    ],
+  },
+});
+
+// Create Lambda integrations
+const adminQueriesIntegration = new LambdaIntegration(
+  backend.adminQueries.resources.lambda
+);
+
+const validateEmailIntegration = new LambdaIntegration(
+  backend.validateEmail.resources.lambda
+);
+
+// Add API routes with Cognito authorization
+const adminQueriesPath = powerSightApi.root.addResource('adminQueries');
+adminQueriesPath.addMethod('POST', adminQueriesIntegration, {
+  authorizationType: AuthorizationType.COGNITO,
+  authorizer: cognitoAuthorizer,
+});
+
+const validateEmailPath = powerSightApi.root.addResource('validateEmail');
+validateEmailPath.addMethod('POST', validateEmailIntegration, {
+  authorizationType: AuthorizationType.COGNITO,
+  authorizer: cognitoAuthorizer,
+});
+
+// Add API output to backend
+backend.addOutput({
+  custom: {
+    API: {
+      [powerSightApi.restApiName]: {
+        endpoint: powerSightApi.url,
+        region: Stack.of(powerSightApi).region,
+        apiName: powerSightApi.restApiName,
+      },
+    },
+  },
 });
 
 // TODO: Add OpenSearch cluster configuration using proper CDK backend extension
 // The current backend.backend.node.addValidation() approach is not valid for Amplify Gen 2
 // Need to use backend.createStack() for custom CDK resources
+
+export default backend;
