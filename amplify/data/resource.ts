@@ -700,3 +700,9 @@ export const data = defineData({
   // Configure DynamoDB streams for searchable models
   // This will be connected to OpenSearch sync function via CDK
 });
+
+// Add TABLE_SUFFIX environment variable
+// Set to "NONE" for all environments (no table suffix)
+data.resources.cfnResources.amplifyDynamoDbTables.forEach((table) => {
+  table.addPropertyOverride('TableName', `${table.tableName}-dev`);
+});
