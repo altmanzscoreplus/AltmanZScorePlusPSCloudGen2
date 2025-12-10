@@ -233,9 +233,10 @@ const dataResources = backend.data.resources.cfnResources;
 const amplifyTables = backend.data.resources.amplifyDynamoDbTables;
 
 // Enable streams and connect each searchable model's table to the OpenSearch sync Lambda
-for (const [modelName, table] of Object.entries(amplifyTables)) {
-  // Check if this is a searchable model
-  if (searchableModels.includes(modelName)) {
+for (const modelName of searchableModels) {
+  const table = amplifyTables[modelName];
+
+  if (table) {
     console.log(`Enabling stream and connecting Lambda for model: ${modelName}`);
 
     // Enable DynamoDB stream with NEW_AND_OLD_IMAGES
@@ -248,7 +249,7 @@ for (const [modelName, table] of Object.entries(amplifyTables)) {
 
     // Add DynamoDB stream as event source to Lambda
     backend.openSearchSync.resources.lambda.addEventSource(
-      new DynamoEventSource(table, {
+      new DynamoEventSource(table as any, {
         startingPosition: StartingPosition.LATEST,
         batchSize: 100,
         bisectBatchOnError: true,
