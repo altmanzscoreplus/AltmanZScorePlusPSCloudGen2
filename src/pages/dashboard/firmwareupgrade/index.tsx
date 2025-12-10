@@ -43,24 +43,11 @@ const Page: NextPage = () => {
 	const IoTConfig = {
 		region: "us-west-1",
 		endpoint: "https://a35th8mhj0yen6-ats.iot.us-west-1.amazonaws.com", // not sure if this is OK in plain text
-		credentials: {
-			// accessKeyId: "", // NOTE!! WE SHOULD NOT BE STORING THESE IN PLAIN TEXT IN CODE
-			// secretAccessKey: "", // I NEED TO FIGURE OUT HOW TO REQUEST THEM FROM THE ENVIRONMENT
-		},
+		credentials: {},
 		thingName: "RichGateway"
 	}
 	const IoT = new IoTDataPlaneClient(IoTConfig);
 	
-	// const S3Config = {
-	// 	credentials: {
-	// 		accessKeyId: "AKIAWGYN4BC5JC356DPT", // NOTE!! WE SHOULD NOT BE STORING THESE IN PLAIN TEXT IN CODE
-	// 		secretAccessKey: "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", // I NEED TO FIGURE OUT HOW TO REQUEST THEM FROM THE ENVIRONMENT
-	// 	},
-	// 	region: "us-west-1",
-	// 	//sha256: Hash.bind(null, "sha256"),
-	// 	bucket: "ps-gateway-firmware",
-	// };
-	// const S3 = new S3Client(S3Config);
 	
 	const [selectedModel, setSelectedModel] = useState("G2000");
 	const [selectedFirmware, setSelectedFirmware] = useState("");

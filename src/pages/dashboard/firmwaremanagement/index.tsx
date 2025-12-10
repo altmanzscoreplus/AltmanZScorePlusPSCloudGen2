@@ -71,12 +71,6 @@ const Page: NextPage = () => {
   usePageView();
 	
 	const S3Config = {
-		credentials: {
-			// accessKeyId: "", // NOTE!! WE SHOULD NOT BE STORING THESE IN PLAIN TEXT IN CODE
-			// secretAccessKey: "", // I NEED TO FIGURE OUT HOW TO REQUEST THEM FROM THE ENVIRONMENT
-		},
-		region: "us-west-1",
-		//sha256: Hash.bind(null, "sha256"),
 		bucket: "ps-gateway-firmware",
 	};
 	const S3 = new S3Client(S3Config);
