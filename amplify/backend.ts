@@ -192,8 +192,8 @@ const openSearchSyncLambda = new NodejsFunction(dataStack, 'OpenSearchSyncFuncti
     OPENSEARCH_ENDPOINT: openSearchDomain.domainEndpoint,
     AWS_REGION: dataStack.region,
   },
+  depsLockFilePath: './amplify/functions/opensearch-sync/package-lock.json',
   bundling: {
-    externalModules: ['aws-sdk'],
     minify: false,
     sourceMap: true,
   },
