@@ -1,6 +1,6 @@
 import { defineBackend } from '@aws-amplify/backend';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import { Stack, Tags, RemovalPolicy } from 'aws-cdk-lib';
+import { Stack, Tags, RemovalPolicy, Duration } from 'aws-cdk-lib';
 import {
   AuthorizationType,
   CognitoUserPoolsAuthorizer,
@@ -186,7 +186,7 @@ const openSearchSyncLambda = new NodejsFunction(dataStack, 'OpenSearchSyncFuncti
   functionName: `opensearch-sync-${environment}`,
   entry: './amplify/functions/opensearch-sync/handler.ts',
   runtime: lambda.Runtime.NODEJS_22_X,
-  timeout: lambda.Duration.seconds(60),
+  timeout: Duration.seconds(60),
   memorySize: 512,
   environment: {
     OPENSEARCH_ENDPOINT: openSearchDomain.domainEndpoint,
