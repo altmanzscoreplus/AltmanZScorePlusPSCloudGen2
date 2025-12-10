@@ -1,0 +1,131 @@
+/* Remove if fonts are not used */
+@import '~@fontsource/inter/100.css';
+@import '~@fontsource/inter/200.css';
+@import '~@fontsource/inter/300.css';
+@import '~@fontsource/inter/400.css';
+@import '~@fontsource/inter/500.css';
+@import '~@fontsource/inter/600.css';
+@import '~@fontsource/inter/700.css';
+@import '~@fontsource/inter/800.css';
+@import '~@fontsource/inter/900.css';
+@import '~@fontsource/roboto-mono/300.css';
+@import '~@fontsource/roboto-mono/400.css';
+@import '~@fontsource/plus-jakarta-sans/600.css';
+@import '~@fontsource/plus-jakarta-sans/700.css';
+
+/* Remove if simplebar is not used */
+@import '~simplebar-react/dist/simplebar.min.css';
+
+/* Remove if slick-carousel is not used */
+@import '~slick-carousel/slick/slick.css';
+@import '~slick-carousel/slick/slick-theme.css';
+
+:root {
+  --header-bg-color: #000000; /* #1c2536 */
+}
+
+.css-jdwgpd-MuiPaper-root-MuiDrawer-paper {
+	--nav-bg: black !important; /* this controls the sidebar nav background color */
+}
+
+#custom-table {
+  table-layout: fixed;
+  max-height: 100px;
+  overflow-y: auto;
+}
+.custom-table-row {
+  height: 20px !important; /* Apply the desired height */
+}
+/* Remove if react-quill is not used */
+@import '~react-quill/dist/quill.snow.css';
+
+/* Remove if react-draft-wysiwyg is not used */
+@import '~react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
+/* Remove if mapbox is not used */
+@import '~mapbox-gl/dist/mapbox-gl.css';
+
+.scrool {
+ 
+    height: 250px;
+    overflow-y: scroll;
+}
+
+.scroolcustomer {
+ 
+    height: 500px;
+    overflow-y: scroll;
+}
+.phoneInputCustomStyle .PhoneInputInput {
+  height: 200%;
+}
+
+.scroolcustomercontrol {
+ 
+    height: 420px;
+    overflow-y: scroll;
+}
+.end_d_n_sh p{
+  background-color: #ff7c80;
+  color: #fff;
+  padding: 5px 10px;
+  height: 30px;
+  text-align: center;
+  border-radius: 30px;
+}
+
+.PhoneInputInput {
+  flex: 1 1;
+  min-width: 0;
+  padding: 5px 10px;
+  min-height: 57px;
+  border: none;
+  border-radius: 8px;
+  outline: none!important;
+}
+
+.PhoneInput {
+  display: flex;
+  align-items: center;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+}
+header {
+  background-color: var(--header-bg-color) !important;
+}
+header .MuiStack-root button svg{ 
+  color: #fff!important;
+}
+.cu_fi_up label {
+  width: 100%;
+  max-width: 100%;
+  padding: 170px 20px 70px;
+  display: block;
+  height: auto;
+}
+.cu_fi_up div {
+  display: block;
+}
+.cu_fi_up span {
+  font-size: 25px!important;
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+.cu_fi_up .file-types {
+  width: 100%;
+  display: block;
+  text-align: center;
+  max-width: 100%!important;
+  font-size: 16px!important;
+  margin-top: 30px;
+}
+.cu_fi_up svg{
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  top: 75px;
+  width: 75px;
+  height: 75px;
+}

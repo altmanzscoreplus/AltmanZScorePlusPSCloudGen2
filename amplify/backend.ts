@@ -1,6 +1,6 @@
 import { defineBackend } from '@aws-amplify/backend';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import { Stack, Tags } from 'aws-cdk-lib';
+import { Stack, Tags, RemovalPolicy } from 'aws-cdk-lib';
 import {
   AuthorizationType,
   CognitoUserPoolsAuthorizer,
@@ -8,6 +8,10 @@ import {
   LambdaIntegration,
   RestApi,
 } from 'aws-cdk-lib/aws-apigateway';
+import * as opensearch from 'aws-cdk-lib/aws-opensearchservice';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
+import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { auth } from './auth/resource';
 import { data } from './data/resource';
 import { storage } from './storage/resource';
@@ -74,6 +78,9 @@ import { addPasswordProtection } from './functions/add-password-protection/resou
 import { adminQueries } from './functions/AdminQueries2855213c/resource';
 import { validateEmail } from './functions/validateEMail/resource';
 
+// OpenSearch Sync Function
+import { openSearchSync } from './functions/opensearch-sync/resource';
+
 const backend = defineBackend({
   auth,
   data,
@@ -112,7 +119,144 @@ const backend = defineBackend({
   // Admin and Utility Functions
   adminQueries,
   validateEmail,
+  // OpenSearch Sync
+  openSearchSync,
 });
+
+// ============================================================================
+// OpenSearch Configuration
+// ============================================================================
+
+// Get the stack for OpenSearch resources
+const dataStack = backend.data.stack;
+const clusterName = `powersight-search-${environment}`;
+
+// Create OpenSearch domain
+const openSearchDomain = new opensearch.Domain(dataStack, 'PowersightSearchDomain', {
+  version: opensearch.EngineVersion.OPENSEARCH_2_11,
+  domainName: clusterName.toLowerCase(),
+
+  // Cluster configuration
+  capacity: {
+    dataNodes: 2,
+    dataNodeInstanceType: 't3.small.search',
+    masterNodes: 0, // For small clusters, master nodes are not needed
+  },
+
+  // Storage configuration
+  ebs: {
+    volumeSize: 20,
+    volumeType: ec2.EbsDeviceVolumeType.GP3,
+  },
+
+  // Security configuration
+  nodeToNodeEncryption: true,
+  encryptionAtRest: {
+    enabled: true,
+  },
+  enforceHttps: true,
+
+  // Access policies - allow Lambda to access
+  accessPolicies: [
+    new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      principals: [new iam.ServicePrincipal('lambda.amazonaws.com')],
+      actions: ['es:*'],
+      resources: [`arn:aws:es:${dataStack.region}:${dataStack.account}:domain/${clusterName.toLowerCase()}/*`],
+    }),
+  ],
+
+  // Logging
+  logging: {
+    slowSearchLogEnabled: true,
+    appLogEnabled: true,
+    slowIndexLogEnabled: true,
+  },
+
+  // Advanced options
+  advancedOptions: {
+    'rest.action.multi.allow_explicit_index': 'true',
+    'indices.fielddata.cache.size': '40',
+    'indices.query.bool.max_clause_count': '10000',
+  },
+
+  // Removal policy for development
+  removalPolicy: environment === 'prod' ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
+});
+
+// Grant OpenSearch sync Lambda permissions to write to OpenSearch
+openSearchDomain.grantReadWrite(backend.openSearchSync.resources.lambda);
+
+// Add OpenSearch endpoint to Lambda environment
+backend.openSearchSync.resources.lambda.addEnvironment(
+  'OPENSEARCH_ENDPOINT',
+  openSearchDomain.domainEndpoint
+);
+
+// ============================================================================
+// Connect DynamoDB Streams to OpenSearch Sync Lambda
+// ============================================================================
+
+// List of all searchable models that need OpenSearch indexing
+const searchableModels = [
+  'Customer',
+  'Contact',
+  'Gateway',
+  'GatewayRental',
+  'Analyzer',
+  'AnalyzerRental',
+  'Reading',
+  'Client',
+  'PSFile',
+  'Domain',
+  'GatewayAlarmLevelAndInterval',
+  'AnalyzerAlarmLevelAndInterval',
+  'CustomerAlarmLevelAndInterval',
+  'ClientAlarmLevelAndInterval',
+  'GlobalAlarmLevelAndInterval',
+  'AdminAlarmLevelAndInterval',
+  'AdminContact',
+  'AlarmMessage',
+  'AutoIncrementedId',
+  'DeviceStatus',
+  'UserLastSelected',
+  'EMailAlertSent',
+  'AlarmSent',
+  'ReadingTest',
+  'Phone',
+  'DynamoDBEvents',
+  'Events'
+];
+
+// Get all DynamoDB tables from the data backend
+const dataResources = backend.data.resources.cfnResources;
+const amplifyTables = backend.data.resources.amplifyDynamoDbTables;
+
+// Enable streams and connect each searchable model's table to the OpenSearch sync Lambda
+for (const [modelName, table] of Object.entries(amplifyTables)) {
+  // Check if this is a searchable model
+  if (searchableModels.includes(modelName)) {
+    console.log(`Enabling stream and connecting Lambda for model: ${modelName}`);
+
+    // Enable DynamoDB stream with NEW_AND_OLD_IMAGES
+    const cfnTable = table.node.defaultChild as any;
+    if (cfnTable) {
+      cfnTable.streamSpecification = {
+        streamViewType: 'NEW_AND_OLD_IMAGES',
+      };
+    }
+
+    // Add DynamoDB stream as event source to Lambda
+    backend.openSearchSync.resources.lambda.addEventSource(
+      new DynamoEventSource(table, {
+        startingPosition: StartingPosition.LATEST,
+        batchSize: 100,
+        bisectBatchOnError: true,
+        retryAttempts: 3,
+      })
+    );
+  }
+}
 
 // ============================================================================
 // REST API Configuration
@@ -420,8 +564,9 @@ Tags.of(backend.data.stack).add('Environment', environment);
 Tags.of(backend.auth.stack).add('Environment', environment);
 Tags.of(backend.storage.stack).add('Environment', environment);
 Tags.of(apiStack).add('Environment', environment);
+Tags.of(openSearchDomain).add('Environment', environment);
 
-// Add API output to backend
+// Add API and OpenSearch outputs to backend
 backend.addOutput({
   custom: {
     API: {
@@ -431,15 +576,17 @@ backend.addOutput({
         apiName: powerSightApi.restApiName,
       },
     },
+    OpenSearch: {
+      endpoint: openSearchDomain.domainEndpoint,
+      domainArn: openSearchDomain.domainArn,
+      domainName: openSearchDomain.domainName,
+      clusterName: clusterName,
+    },
     Environment: {
       name: environment,
       branch: branch,
     },
   },
 });
-
-// TODO: Add OpenSearch cluster configuration using proper CDK backend extension
-// The current backend.backend.node.addValidation() approach is not valid for Amplify Gen 2
-// Need to use backend.createStack() for custom CDK resources
 
 export default backend;

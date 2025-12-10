@@ -1,0 +1,456 @@
+type Mutation {
+  batchCreateContact(batchContactRecords: [batchCreateContactInput]): [Contact] @aws_api_key @aws_cognito_user_pools
+}
+
+
+input batchCreateContactInput {
+	id: ID
+	customer_id: ID
+	name: String
+	title: String
+	email: AWSEmail
+	alarm_level_phone: AlarmLevelType
+	alarm_level_email: AlarmLevelType
+	alarm_level_sms: AlarmLevelType
+	owner: String
+}
+
+
+enum DeviceAssignmentStatusType
+{
+	Assigned
+	Not_Assigned
+}
+
+enum CustomerStatusType
+{
+	Active
+	Inactive
+}
+
+enum DeviceStatusType
+{
+	Communicating
+	Not_Detected
+	Archive
+}
+
+enum DeviceType
+{
+	Hundity_Sensor
+	Camera
+	Video
+	Unknown
+}
+
+enum PSFileType
+{
+	Log
+	Waveform
+}
+
+enum AlarmLevelType
+{
+	None
+        Level_1	
+        Level_2	
+        Level_3	
+}
+
+enum OwnershipType
+{
+	Owned
+	Rented
+}
+
+type Customer
+@model
+@auth(
+  rules: [
+  { allow: owner },
+  { allow: groups, groups: ["Admin"] }
+  #{ allow: groups, groups: ["Customer","Client"], operations: [create,read,update] },
+  { allow: private, operations: [create,read,update,delete] }
+  ]
+)
+{
+	id: ID! @primaryKey
+	ps_customer_id: String @index(name: "byCustomerByPSCustomerId", queryField:"getCustomerByPSCustomerId")
+	name: String @index(name: "byCustomerByCustomerName", queryField:"getCustomerByCustomerName")
+        status: CustomerStatusType
+	user_name: String @index(name: "byCustomerByUserName", queryField:"getCustomerByUserName")
+	company: String @index(name: "byCustomerByCompanyName", queryField:"getCustomerByCompanyName")
+	contact: [Contact] @hasMany(indexName: "ContactByCustomer", fields: ["id"])
+	client: [Client] @hasMany(indexName: "byClientByCustomer", fields: ["id"])
+	gateway_rental: [GatewayRental] @hasMany(indexName: "byGatewayRentalByCustomer", fields: ["id"])
+	analyzer_rental: [AnalyzerRental] @hasMany(indexName: "byAnalyzerRentalByCustomer", fields: ["id"])
+	reading: [Reading] @hasMany(indexName: "byReadingByCustomer", fields: ["id"])
+	ps_file: [PSFile] @hasMany(indexName: "byPSFileByCustomer", fields: ["id"])
+	domain: [Domain] @hasMany(indexName: "byDomainByCustomer",, fields: ["id"])
+	owner: String
+}
+
+type Contact
+@model
+@auth(
+  rules: [
+  { allow: owner },
+  { allow: groups, groups: ["Admin"] }
+  #{ allow: groups, groups: ["Customer","Client"], operations: [create,read,update] },
+  { allow: private, operations: [create,read,update,delete] }
+  ]
+)
+{
+	id: ID! @primaryKey
+	customer_id: ID @index(name: "ContactByCustomer", queryField:"getContactByCustomerId")
+	client_id: ID @index(name: "ContactByClient", queryField:"getContactByClient")
+	name: String @index(name: "ContactByCustomerName", queryField:"getContactByCustomerName")
+        title: String
+	email: AWSEmail
+	phone: AWSPhone
+	alarm_level_phone: AlarmLevelType
+	alarm_level_email: AlarmLevelType
+	alarm_level_sms: AlarmLevelType
+	customer: Customer @belongsTo(fields: ["customer_id"])
+	client: Client @belongsTo(fields: ["client_id"])
+	owner: String
+}
+
+type Gateway
+@model
+@auth(
+  rules: [
+  { allow: owner },
+  { allow: groups, groups: ["Admin"] },
+  { allow: groups, groups: ["Customer","Client"], operations: [create,read,update] },
+  { allow: private, operations: [create,read,update,delete] }
+  ]
+)
+{
+	id: ID! @primaryKey
+	ps_gateway_id: String @index(name: "byGatewayByPSGatewayId", queryField:"getGatewayByPSGatewayId")
+	model: String
+	serial_number: String
+	hw_ver: String
+	fw_ver: String
+	options: String
+	site_location: String
+	room_location: String
+	gps_location: String
+	customer_id: ID @index(name: "byGatewayByCustomer", queryField:"getGatewayByCustomerId")
+	reading: [Reading] @hasMany(indexName: "byReadingByGateway", fields: ["id"])
+	ps_file: [PSFile] @hasMany(indexName: "byPSFileByGateway", fields: ["id"])
+	domain: [Domain] @hasMany(indexName: "byDomainByGateway", fields: ["id"])
+	gateway_rental: [GatewayRental] @hasMany(indexName: "byGatewayRentalByGateway",  fields: ["id"])
+	analyzer_rental: [AnalyzerRental] @hasMany(indexName: "byAnalyzerRentalByGateway", fields: ["id"])
+	analyzer: [Analyzer] @hasMany(indexName: "byAnalyzerByGateway", fields: ["id"])
+	owner: String
+}
+
+type GatewayRental
+@model
+@auth(
+  rules: [
+  { allow: owner },
+  { allow: groups, groups: ["Admin"] },
+  { allow: groups, groups: ["Customer","Client"], operations: [create,read,update] },
+  { allow: private, operations: [create,read,update,delete] }
+  ]
+)
+{
+	id: ID! @primaryKey
+	ownership_type: OwnershipType
+	gateway_id: ID @index(name: "byGatewayRentalByGateway", queryField:"getGatewayrRentalByGateway")
+	customer_id: ID @index(name: "byGatewayRentalByCustomer", queryField:"getGatewayrRentalByCustomer")
+	client_id: ID @index(name: "byGatewayRentalByClient", queryField:"getGatewayrRentalByClient")
+	ref_order: String
+	termination_date: AWSDate
+	room: String @index(name: "ByGatewayRentalByRoom", queryField:"getGatewayRentalByRoom")
+	site: String @index(name: "ByGatewayRentalBySite", queryField:"getGatewayRentalBySite")
+	gateway: Gateway @belongsTo(fields: ["gateway_id"])
+	customer: Customer @belongsTo(fields: ["customer_id"])
+	client: Client @belongsTo(fields: ["client_id"])
+	reading: [Reading] @hasMany(indexName: "byReadingByGatewayRental", fields: ["id"])
+	ps_file: [PSFile] @hasMany(indexName: "byPSFileByGatewayRental", fields: ["id"])
+	domain: [Domain] @hasMany(indexName: "byDomainByGatewayrRental", fields: ["id"])
+	owner: String
+}
+
+type Analyzer
+@model
+@auth(
+  rules: [
+  { allow: owner },
+  { allow: groups, groups: ["Admin"] },
+  { allow: groups, groups: ["Customer","Client"], operations: [create,read,update] },
+  { allow: private, operations: [create,read,update,delete] }
+  ]
+)
+{
+	id: ID! @primaryKey
+	ps_analyzer_id: String @index(name: "byAnalyzerByPSAnalyzerId", queryField:"getAnalyzerByPSAnalyzerId")
+	device_id: String
+	serial_number: String
+	device_type: String
+	model: String
+	hw_ver: String
+	fw_ver: String
+	options: String
+	gateway_id: ID @index(name: "byAnalyzerByGateway", queryField:"getAnalyzerByGatewayId")
+	device_status: DeviceStatusType
+	analyzer_rental: [AnalyzerRental] @hasMany(indexName: "byAnalyzerRentalByAnalyzer", fields: ["id"])
+	gateway: Gateway @belongsTo(fields: ["gateway_id"])
+	reading: [Reading] @hasMany(indexName: "byReadingByAnalyzer", fields: ["id"])
+	ps_file: [PSFile] @hasMany(indexName: "byPSFileByAnalyzer", fields: ["id"])
+	domain: [Domain] @hasMany(indexName: "byDomainByAnalyzer", fields: ["id"])
+	owner: String
+}
+
+type AnalyzerRental
+@model
+@auth(
+  rules: [
+  { allow: owner },
+  { allow: groups, groups: ["Admin"] },
+  { allow: groups, groups: ["Customer","Client"], operations: [create,read,update] },
+  { allow: private, operations: [create,read,update,delete] }
+  ]
+)
+{
+	id: ID! @primaryKey
+	ownership_type: OwnershipType
+	analyzer_id: ID @index(name: "byAnalyzerRentalByAnalyzer", queryField:"getAnalyzerRentalByAnalyzerId")
+	gateway_id: ID @index(name: "byAnalyzerRentalByGateway", queryField:"getAnalyzerRentalByGatewayId")
+	customer_id: ID @index(name: "byAnalyzerRentalByCustomer", queryField:"getAnalyzerRentalByCustomer")
+	client_id: ID @index(name: "byAnalyzerRentalByClient", queryField:"getAnalyzerRentalByClient")
+	ref_order: String
+	termination_date: AWSDate
+	circuit: String @index(name: "ByAnalyzeRentalByCircuit", queryField:"getAnalyzeRentalByCircuit")
+	room: String @index(name: "ByAnalyzeRentalByRoom", queryField:"getAnalyzeRentalByRoom")
+	site: String @index(name: "ByAnalyzeRentalBySite", queryField:"getAnalyzeRentalBySite")
+	analyzer: Analyzer @belongsTo(fields: ["analyzer_id"])
+	gateway: Gateway @belongsTo(fields: ["gateway_id"])
+	customer: Customer @belongsTo(fields: ["customer_id"])
+	client: Client @belongsTo(fields: ["client_id"])
+	reading: [Reading] @hasMany(indexName: "byReadingByAnalyzerRental", fields: ["id"])
+	ps_file: [PSFile] @hasMany(indexName: "byPSFileByAnalyzerRental", fields: ["id"])
+	domain: [Domain] @hasMany(indexName: "byDomainByAnalyzerRental", fields: ["id"])
+	owner: String
+}
+
+type Reading
+@model
+@auth(
+  rules: [
+  { allow: owner },
+  { allow: groups, groups: ["Admin"] },
+  { allow: groups, groups: ["Customer","Client"], operations: [create,read,update] },
+  { allow: private, operations: [create,read,update,delete] }
+  ]
+)
+{
+	id: ID! @primaryKey
+	customer_id: ID @index(name: "byReadingByCustomer", queryField:"getReadingByCustomerId")
+	client_id: ID @index(name: "byReadingByClient", queryField:"getReadingByClientId")
+	gateway_id: ID @index(name: "byReadingByGateway", queryField:"getReadingByGatewayId")
+	gateway_rental_id: ID @index(name: "byReadingByGatewayRental", queryField:"getReadingByGatewayRentalId")
+	analyzer_id: ID @index(name: "byReadingByAnalyzer", queryField:"getReadingByAnalyzerId")
+	analyzer_rental_id: ID @index(name: "byReadingByAnalyzerRental", queryField:"getReadingByAnalyzerRentalId")
+	sample_server_datetime: AWSDateTime
+	sample_server_epoch_time: Int
+	sample_device_datetime: AWSDateTime
+	sample_device_epoch_time: Int
+	data: AWSJSON
+	customer: Customer @belongsTo(fields: ["customer_id"])
+	client: Client @belongsTo(fields: ["client_id"])
+	gateway: Gateway @belongsTo(fields: ["gateway_id"])
+	gateway_rental: GatewayRental @belongsTo(fields: ["gateway_rental_id"])
+	analyzer: Analyzer @belongsTo(fields: ["analyzer_id"])
+	analyzer_rental: AnalyzerRental @belongsTo(fields: ["analyzer_rental_id"])
+	owner: String
+}
+
+#type Log
+#@model
+#@auth(
+#  rules: [
+#  { allow: owner },
+#  { allow: groups, groups: ["Admin"] },
+#  { allow: groups, groups: ["Customer","Client"], operations: [create,read,update] },
+#  { allow: private, operations: [create,read,update] }
+#  ]
+#)
+#{
+#	id: ID! @primaryKey
+#	customer_id: ID @index(name: "byLogByCustomer", queryField:"getLogByCustomerId")
+#	client_id: ID @index(name: "byLogByClient", queryField:"getLogByClientId")
+#	gateway_id: ID @index(name: "byLogByGateway", queryField:"getLogByGatewayId")
+#	analyzer_rental_id: ID @index(name: "byLogByAnalyzerRental", queryField:"getLogByAnalyzerRentalId")
+#	sample_server_datetime: AWSDateTime
+#	sample_server_epoch_time: Int
+#	sample_device_datetime: AWSDateTime
+#	sample_device_epoch_time: Int
+#	customer: Customer @belongsTo(fields: ["customer_id"])
+#	client: Client @belongsTo(fields: ["client_id"])
+#	analyzer_rental: AnalyzerRental @belongsTo(fields: ["analyzer_rental_id"])
+#	gateway: Gateway @belongsTo(fields: ["gateway_id"])
+#	owner: String
+#}
+#
+#type Waveform
+#@model
+#@auth(
+#  rules: [
+#  { allow: owner },
+#  { allow: groups, groups: ["Admin"] },
+#  { allow: groups, groups: ["Customer","Client"], operations: [create,read,update] },
+#  { allow: private, operations: [create,read,update] }
+#  ]
+#)
+#{
+#	id: ID! @primaryKey
+#	customer_id: ID @index(name: "byWaveformByCustomer", queryField:"getWaveformByCustomerId")
+#	client_id: ID @index(name: "byWaveformByClient", queryField:"getWaveformByClientId")
+#	gateway_id: ID @index(name: "byWaveformByGateway", queryField:"getWaveformByGatewayId")
+#	analyzer_rental_id: ID @index(name: "byWaveformByAnalyzerRental", queryField:"getWaveformByAnalyzerRentalId")
+#	sample_server_datetime: AWSDateTime
+#	sample_server_epoch_time: Int
+#	sample_device_datetime: AWSDateTime
+#	sample_device_epoch_time: Int
+#	customer: Customer @belongsTo(fields: ["customer_id"])
+#	client: Client @belongsTo(fields: ["client_id"])
+#	gateway: Gateway @belongsTo(fields: ["gateway_id"])
+#	analyzer_rental: AnalyzerRental @belongsTo(fields: ["analyzer_rental_id"])
+#	owner: String
+#}
+
+type Client
+@model
+@auth(
+  rules: [
+  { allow: owner },
+  { allow: groups, groups: ["Admin"] },
+  { allow: groups, groups: ["Customer"], operations: [create,read,update] },
+  { allow: private, operations: [create,read,update,delete] }
+  ]
+)
+{
+	id: ID! @primaryKey
+	customer_id: ID @index(name: "byClientByCustomer", queryField:"getClientByCustomerId")
+	user_name: String @index(name: "byClientNameByUserName", queryField:"getClientNameByUserName")
+	name: String @index(name: "byClientNameByClientName", queryField:"getClientNameByClientName")
+	customer: Customer @belongsTo(fields: ["customer_id"])
+	contact: [Contact] @hasMany(fields: ["id"])
+	gateway_rental: [GatewayRental] @hasMany(fields: ["id"])
+	analyzer_rental: [AnalyzerRental] @hasMany(fields: ["id"])
+	reading: [Reading] @hasMany(fields: ["id"])
+	ps_file: [PSFile] @hasMany(fields: ["id"])
+	domain: [Domain] @hasMany(fields: ["id"])
+	owner: String
+}
+
+type PSFile
+@model
+@auth(
+  rules: [
+  { allow: owner },
+  { allow: groups, groups: ["Admin"] },
+  { allow: groups, groups: ["Customer","Client"], operations: [create,read,update] },
+  { allow: private, operations: [create,read,update,delete] }
+  ]
+)
+{
+	id: ID! @primaryKey
+	file_type: PSFileType
+	domain_id: ID @index(name: "byPSFileByDomain", queryField:"getPSFileByDomainId")
+	customer_id: ID @index(name: "byPSFileByCustomer", queryField:"getPSFileByCustomerId")
+	client_id: ID @index(name: "byPSFileByClient", queryField:"getPSFileByClientId")
+	gateway_id: ID @index(name: "byPSFileByGateway", queryField:"getPSFileByGatewayId")
+	gateway_rental_id: ID @index(name: "byPSFileByGatewayRental", queryField:"getPSFileByGatewayRentalId")
+	analyzer_id: ID @index(name: "byPSFileByAnalyzer", queryField:"getPSFileByAnalyzerId")
+	analyzer_rental_id: ID @index(name: "byPSFileByAnalyzerRental", queryField:"getPSFileByAnalyzerRentalId")
+	sample_server_datetime: AWSDateTime
+	sample_server_epoch_time: Int
+	sample_device_datetime: AWSDateTime
+	sample_device_epoch_time: Int
+	customer: Customer @belongsTo(fields: ["customer_id"])
+	client: Client @belongsTo(fields: ["client_id"])
+	gateway: Gateway @belongsTo(fields: ["gateway_id"])
+	gateway_rental: GatewayRental @belongsTo(fields: ["gateway_rental_id"])
+	analyzer: Analyzer @belongsTo(fields: ["analyzer_id"])
+	analyzer_rental: AnalyzerRental @belongsTo(fields: ["analyzer_rental_id"])
+	domain: Domain @belongsTo(fields: ["domain_id"])
+	owner: String
+}
+
+type Domain
+@model
+@auth(
+  rules: [
+  { allow: owner },
+  { allow: groups, groups: ["Admin"] },
+  { allow: groups, groups: ["Customer","Client"], operations: [create,read,update] },
+  { allow: private, operations: [create,read,update,delete] }
+  ]
+)
+{
+	id: ID! @primaryKey
+	data_from: AWSDateTime
+	termination: AWSDateTime
+	access: AWSDateTime
+	domain_status: String
+	originator: String
+	power_type: String
+	power_source: String
+	load_type: String
+	app_type: String
+	additional_domain_characterstics: String
+	customer_id: ID @index(name: "byDomainByCustomer", queryField:"getDomainByCustomerId")
+	client_id: ID @index(name: "byDomainByClient", queryField:"getDomainByClientId")
+	gateway_id: ID @index(name: "byDomainByGateway", queryField:"getDomainByGatewayrId")
+	gateway_rental_id: ID @index(name: "byDomainByGatewayrRental", queryField:"getDomainByGatewayrRentalId")
+	analyzer_id: ID @index(name: "byDomainByAnalyzer", queryField:"getDomainByAnalyzerId")
+	analyzer_rental_id: ID @index(name: "byDomainByAnalyzerRental", queryField:"getDomainByAnalyzerRentalId")
+	customer: Customer @belongsTo(fields: ["customer_id"])
+	client: Client @belongsTo(fields: ["client_id"])
+	gateway: Gateway@belongsTo(fields: ["gateway_id"])
+	gateway_rental: GatewayRental @belongsTo(fields: ["gateway_rental_id"])
+	analyzer: Analyzer@belongsTo(fields: ["analyzer_id"])
+	analyzer_rental: AnalyzerRental @belongsTo(fields: ["analyzer_rental_id"])
+	ps_file: [PSFile] @hasMany(fields: ["id"])
+	owner: String
+}
+
+type deleteme 
+@model
+{
+id: ID!
+}
+
+type ReadingTest
+@model
+@auth(
+  rules: [
+  { allow: owner },
+  { allow: groups, groups: ["Admin"] },
+  { allow: groups, groups: ["Customer","Client"], operations: [create,read,update] },
+  { allow: private, operations: [create,read,update,delete] }
+  ]
+)
+{
+	analyzer_id: String! @primaryKey(sortKeyFields: ["createdAt"])
+	createdAt: AWSDateTime!
+	updatedat: AWSDateTime
+	expireAt: AWSDateTime
+	expireAtEpochTime: Float
+	gateway_id: ID 
+	data: AWSJSON
+	owner: String
+}
+
+type Events
+@model
+{
+	eventID: String! @primaryKey
+	epochTime: Int
+}
