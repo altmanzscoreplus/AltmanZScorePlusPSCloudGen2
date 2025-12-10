@@ -121,8 +121,11 @@ const backend = defineBackend({
 });
 
 // ============================================================================
-// OpenSearch Configuration
+// OpenSearch Configuration - TEMPORARILY DISABLED
 // ============================================================================
+// Note: OpenSearch integration is commented out due to Amplify Gen 2 build issues
+// See OPENSEARCH_DEPLOYMENT_NOTE.md for alternative deployment options
+/*
 
 // Get the stack for OpenSearch resources
 const dataStack = backend.data.stack;
@@ -265,6 +268,8 @@ for (const modelName of searchableModels) {
     );
   }
 }
+*/
+// End of commented OpenSearch configuration
 
 // ============================================================================
 // REST API Configuration
@@ -572,9 +577,8 @@ Tags.of(backend.data.stack).add('Environment', environment);
 Tags.of(backend.auth.stack).add('Environment', environment);
 Tags.of(backend.storage.stack).add('Environment', environment);
 Tags.of(apiStack).add('Environment', environment);
-Tags.of(openSearchDomain).add('Environment', environment);
 
-// Add API and OpenSearch outputs to backend
+// Add API outputs to backend
 backend.addOutput({
   custom: {
     API: {
@@ -583,12 +587,6 @@ backend.addOutput({
         region: Stack.of(powerSightApi).region,
         apiName: powerSightApi.restApiName,
       },
-    },
-    OpenSearch: {
-      endpoint: openSearchDomain.domainEndpoint,
-      domainArn: openSearchDomain.domainArn,
-      domainName: openSearchDomain.domainName,
-      clusterName: clusterName,
     },
     Environment: {
       name: environment,
