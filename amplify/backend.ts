@@ -194,7 +194,8 @@ const openSearchSyncLambda = new NodejsFunction(dataStack, 'OpenSearchSyncFuncti
   },
   bundling: {
     externalModules: ['aws-sdk'],
-    nodeModules: ['@opensearch-project/opensearch', '@aws-sdk/credential-provider-node'],
+    minify: false,
+    sourceMap: true,
   },
 });
 
