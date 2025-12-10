@@ -1,6 +1,6 @@
 import { defineBackend } from '@aws-amplify/backend';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import { Stack } from 'aws-cdk-lib';
+import { Stack, Tags } from 'aws-cdk-lib';
 import {
   AuthorizationType,
   CognitoUserPoolsAuthorizer,
@@ -11,6 +11,25 @@ import {
 import { auth } from './auth/resource';
 import { data } from './data/resource';
 import { storage } from './storage/resource';
+
+// ============================================================================
+// Environment Configuration
+// ============================================================================
+
+// Get branch from environment
+const branch = process.env.AWS_BRANCH || 'dev';
+
+// Map branch to environment
+const envMap: Record<string, string> = {
+  main: 'prod',
+  master: 'prod',
+  staging: 'test',
+  test: 'test',
+};
+
+const environment = envMap[branch] || 'dev';
+
+console.log(`Building for branch: ${branch}, environment: ${environment}`);
 
 // Email and Notification Functions
 import { sendEMail } from './functions/send-email/resource';
@@ -110,11 +129,11 @@ const cognitoAuthorizer = new CognitoUserPoolsAuthorizer(apiStack, 'CognitoAutho
 
 // Create REST API for PowerSight
 const powerSightApi = new RestApi(apiStack, 'PowerSightApi', {
-  restApiName: 'PowerSightApi',
-  description: 'REST API for PowerSight application',
+  restApiName: `PowerSightApi-${environment}`,
+  description: `REST API for PowerSight application (${environment})`,
   deploy: true,
   deployOptions: {
-    stageName: 'dev',
+    stageName: environment,
   },
   defaultCorsPreflightOptions: {
     allowOrigins: Cors.ALL_ORIGINS,
@@ -396,6 +415,12 @@ s3Resource
     authorizer: cognitoAuthorizer,
   });
 
+// Add tags to all backend resources
+Tags.of(backend.data.stack).add('Environment', environment);
+Tags.of(backend.auth.stack).add('Environment', environment);
+Tags.of(backend.storage.stack).add('Environment', environment);
+Tags.of(apiStack).add('Environment', environment);
+
 // Add API output to backend
 backend.addOutput({
   custom: {
@@ -405,6 +430,10 @@ backend.addOutput({
         region: Stack.of(powerSightApi).region,
         apiName: powerSightApi.restApiName,
       },
+    },
+    Environment: {
+      name: environment,
+      branch: branch,
     },
   },
 });

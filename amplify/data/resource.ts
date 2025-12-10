@@ -688,8 +688,18 @@ Events: a
 
 export type Schema = ClientSchema<typeof schema>;
 
+// Get environment suffix based on branch
+const branch = process.env.AWS_BRANCH || 'dev';
+const envMap: Record<string, string> = {
+  main: 'prod',
+  master: 'prod',
+  staging: 'test',
+  test: 'test',
+};
+const envSuffix = envMap[branch] || 'dev';
+
 export const data = defineData({
-  name: 'ps-cloud-gen2',
+  name: `ps-cloud-gen2-${envSuffix}`,
   schema,
   authorizationModes: {
     defaultAuthorizationMode: 'userPool',
