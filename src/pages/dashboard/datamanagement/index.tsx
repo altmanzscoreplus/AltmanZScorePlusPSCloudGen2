@@ -70,10 +70,10 @@ const Page: NextPage = () => {
 	const config = {
 		region: "us-west-1",
 		endpoint: "https://a35th8mhj0yen6-ats.iot.us-west-1.amazonaws.com", // not sure if this is OK in plain text
-		credentials: {
-			accessKeyId: "AKIAWGYN4BC5JC356DPT", // NOTE!! WE SHOULD NOT BE STORING THESE IN PLAIN TEXT IN CODE
-			secretAccessKey: "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", // I NEED TO FIGURE OUT HOW TO REQUEST THEM FROM THE ENVIRONMENT
-		},
+		// credentials: {
+		// 	accessKeyId: "", // NOTE!! WE SHOULD NOT BE STORING THESE IN PLAIN TEXT IN CODE
+		// 	secretAccessKey: "", // I NEED TO FIGURE OUT HOW TO REQUEST THEM FROM THE ENVIRONMENT
+		// },
 		thingName: "RichGateway"
 	}
 	const S3Config = {

@@ -72,8 +72,8 @@ const Page: NextPage = () => {
 	
 	const S3Config = {
 		credentials: {
-			accessKeyId: "AKIAWGYN4BC5JC356DPT", // NOTE!! WE SHOULD NOT BE STORING THESE IN PLAIN TEXT IN CODE
-			secretAccessKey: "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", // I NEED TO FIGURE OUT HOW TO REQUEST THEM FROM THE ENVIRONMENT
+			// accessKeyId: "", // NOTE!! WE SHOULD NOT BE STORING THESE IN PLAIN TEXT IN CODE
+			// secretAccessKey: "", // I NEED TO FIGURE OUT HOW TO REQUEST THEM FROM THE ENVIRONMENT
 		},
 		region: "us-west-1",
 		//sha256: Hash.bind(null, "sha256"),
