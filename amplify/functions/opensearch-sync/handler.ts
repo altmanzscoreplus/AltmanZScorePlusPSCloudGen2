@@ -1,3 +1,4 @@
+/// <reference path="./opensearch.d.ts" />
 import { DynamoDBStreamEvent, DynamoDBRecord } from 'aws-lambda';
 import { Client } from '@opensearch-project/opensearch';
 import { AwsSigv4Signer } from '@opensearch-project/opensearch/aws';
