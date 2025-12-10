@@ -232,25 +232,21 @@ const searchableModels = [
 ];
 
 // Get all DynamoDB tables from the data backend
-const dataResources = backend.data.resources.cfnResources;
-const tables = dataResources.tables;
+const cfnResources = backend.data.resources.cfnResources as any;
 
 // Enable streams and connect each searchable model's table to the OpenSearch sync Lambda
 for (const modelName of searchableModels) {
-  // Try to find the table - Amplify Gen 2 prefixes table names
-  const tableKey = Object.keys(tables).find(key => key.startsWith(modelName));
+  // Try to find the table in cfnResources - Amplify Gen 2 uses model name + "Table"
+  const tableKey = `${modelName}Table`;
+  const table = cfnResources.cfnTables?.[tableKey];
 
-  if (tableKey) {
-    const table = tables[tableKey];
+  if (table) {
     console.log(`Enabling stream and connecting Lambda for model: ${modelName}`);
 
     // Enable DynamoDB stream with NEW_AND_OLD_IMAGES
-    const cfnTable = table as any;
-    if (cfnTable.streamSpecification === undefined) {
-      cfnTable.addPropertyOverride('StreamSpecification', {
-        StreamViewType: 'NEW_AND_OLD_IMAGES',
-      });
-    }
+    table.streamSpecification = {
+      streamViewType: 'NEW_AND_OLD_IMAGES',
+    };
 
     // Add DynamoDB stream as event source to Lambda
     openSearchSyncLambda.addEventSource(

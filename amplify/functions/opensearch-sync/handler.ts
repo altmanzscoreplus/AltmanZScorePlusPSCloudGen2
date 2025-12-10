@@ -3,6 +3,9 @@ const { Client } = require('@opensearch-project/opensearch');
 const { AwsSigv4Signer } = require('@opensearch-project/opensearch/aws');
 const { defaultProvider } = require('@aws-sdk/credential-provider-node');
 
+// Define Client type
+type OpenSearchClient = InstanceType<typeof Client>;
+
 // OpenSearch client configuration - uses the shared cluster
 const getClient = async () => {
   return new Client({
@@ -63,7 +66,7 @@ export const handler = async (event: DynamoDBStreamEvent) => {
   }
 };
 
-async function processRecord(client: Client, record: DynamoDBRecord) {
+async function processRecord(client: OpenSearchClient, record: DynamoDBRecord) {
   const tableName = record.eventSourceARN?.split('/')[1];
   if (!tableName) {
     console.log('Unable to determine table name from ARN');
@@ -102,7 +105,7 @@ async function processRecord(client: Client, record: DynamoDBRecord) {
   }
 }
 
-async function indexDocument(client: Client, indexName: string, document: any) {
+async function indexDocument(client: OpenSearchClient, indexName: string, document: any) {
   try {
     // Ensure index exists
     const indexExists = await client.indices.exists({ index: indexName });
@@ -134,7 +137,7 @@ async function indexDocument(client: Client, indexName: string, document: any) {
   }
 }
 
-async function deleteDocument(client: Client, indexName: string, id: string) {
+async function deleteDocument(client: OpenSearchClient, indexName: string, id: string) {
   try {
     const response = await client.delete({
       index: indexName,
