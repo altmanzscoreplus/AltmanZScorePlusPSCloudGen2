@@ -1,7 +1,7 @@
-import { DynamoDBStreamEvent, DynamoDBRecord } from 'aws-lambda';
-import { Client } from '@opensearch-project/opensearch';
-import { AwsSigv4Signer } from '@opensearch-project/opensearch/aws';
-import { defaultProvider } from '@aws-sdk/credential-provider-node';
+import type { DynamoDBStreamEvent, DynamoDBRecord } from 'aws-lambda';
+const { Client } = require('@opensearch-project/opensearch');
+const { AwsSigv4Signer } = require('@opensearch-project/opensearch/aws');
+const { defaultProvider } = require('@aws-sdk/credential-provider-node');
 
 // OpenSearch client configuration - uses the shared cluster
 const getClient = async () => {

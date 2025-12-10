@@ -184,14 +184,17 @@ const openSearchDomain = new opensearch.Domain(dataStack, 'PowersightSearchDomai
   removalPolicy: environment === 'prod' ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
 });
 
-// Grant OpenSearch sync Lambda permissions to write to OpenSearch
-openSearchDomain.grantReadWrite(backend.openSearchSync.resources.lambda);
+// Get the underlying Lambda function for configuration
+const openSearchSyncLambda = backend.openSearchSync.resources.lambda;
 
-// Add OpenSearch endpoint to Lambda environment
-backend.openSearchSync.resources.lambda.addEnvironment(
-  'OPENSEARCH_ENDPOINT',
-  openSearchDomain.domainEndpoint
-);
+// Grant OpenSearch sync Lambda permissions to write to OpenSearch
+openSearchDomain.grantReadWrite(openSearchSyncLambda);
+
+// Add OpenSearch endpoint to Lambda environment using CDK Lambda addEnvironment
+const lambdaFunction = openSearchSyncLambda.node.defaultChild as any;
+if (lambdaFunction) {
+  lambdaFunction.addPropertyOverride('Environment.Variables.OPENSEARCH_ENDPOINT', openSearchDomain.domainEndpoint);
+}
 
 // ============================================================================
 // Connect DynamoDB Streams to OpenSearch Sync Lambda
@@ -230,26 +233,28 @@ const searchableModels = [
 
 // Get all DynamoDB tables from the data backend
 const dataResources = backend.data.resources.cfnResources;
-const amplifyTables = backend.data.resources.amplifyDynamoDbTables;
+const tables = dataResources.tables;
 
 // Enable streams and connect each searchable model's table to the OpenSearch sync Lambda
 for (const modelName of searchableModels) {
-  const table = amplifyTables[modelName];
+  // Try to find the table - Amplify Gen 2 prefixes table names
+  const tableKey = Object.keys(tables).find(key => key.startsWith(modelName));
 
-  if (table) {
+  if (tableKey) {
+    const table = tables[tableKey];
     console.log(`Enabling stream and connecting Lambda for model: ${modelName}`);
 
     // Enable DynamoDB stream with NEW_AND_OLD_IMAGES
-    const cfnTable = table.node.defaultChild as any;
-    if (cfnTable) {
-      cfnTable.streamSpecification = {
-        streamViewType: 'NEW_AND_OLD_IMAGES',
-      };
+    const cfnTable = table as any;
+    if (cfnTable.streamSpecification === undefined) {
+      cfnTable.addPropertyOverride('StreamSpecification', {
+        StreamViewType: 'NEW_AND_OLD_IMAGES',
+      });
     }
 
     // Add DynamoDB stream as event source to Lambda
-    backend.openSearchSync.resources.lambda.addEventSource(
-      new DynamoEventSource(table as any, {
+    openSearchSyncLambda.addEventSource(
+      new DynamoEventSource(table, {
         startingPosition: StartingPosition.LATEST,
         batchSize: 100,
         bisectBatchOnError: true,
