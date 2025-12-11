@@ -10,8 +10,10 @@ import {
 } from 'aws-cdk-lib/aws-apigateway';
 import * as opensearch from 'aws-cdk-lib/aws-opensearchservice';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
+import { Code } from 'aws-cdk-lib/aws-lambda';
 import { auth } from './auth/resource';
 import { data } from './data/resource';
 import { storage } from './storage/resource';
@@ -183,11 +185,32 @@ const openSearchDomain = new opensearch.Domain(dataStack, 'PowersightSearchDomai
   removalPolicy: environment === 'prod' ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
 });
 
+// Create Lambda Layer for OpenSearch dependencies
+const openSearchLayer = new lambda.LayerVersion(dataStack, 'OpenSearchLayer', {
+  code: Code.fromAsset('./amplify/functions/opensearch-sync', {
+    bundling: {
+      image: lambda.Runtime.NODEJS_22_X.bundlingImage,
+      command: [
+        'bash', '-c',
+        'mkdir -p /asset-output/nodejs && ' +
+        'cd /asset-input && ' +
+        'npm install --production --prefix /asset-output/nodejs @opensearch-project/opensearch@2.13.0 @aws-sdk/credential-provider-node@3.943.0'
+      ],
+    },
+  }),
+  compatibleRuntimes: [lambda.Runtime.NODEJS_22_X],
+  description: 'OpenSearch client and AWS SDK dependencies',
+});
+
 // Get the OpenSearch sync Lambda from the backend
 const openSearchSyncLambda = backend.openSearchSync.resources.lambda;
 
+// Add the layer to the Lambda
+const lambdaFunction = openSearchSyncLambda.node.defaultChild as lambda.CfnFunction;
+lambdaFunction.layers = lambdaFunction.layers || [];
+lambdaFunction.layers.push(openSearchLayer.layerVersionArn);
+
 // Add environment variables using CDK's Function construct
-const lambdaFunction = openSearchSyncLambda.node.defaultChild as any;
 lambdaFunction.addPropertyOverride('Environment.Variables.OPENSEARCH_ENDPOINT', openSearchDomain.domainEndpoint);
 lambdaFunction.addPropertyOverride('Environment.Variables.AWS_REGION', dataStack.region);
 
