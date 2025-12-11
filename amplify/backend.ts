@@ -10,10 +10,8 @@ import {
 } from 'aws-cdk-lib/aws-apigateway';
 import * as opensearch from 'aws-cdk-lib/aws-opensearchservice';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
-import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { auth } from './auth/resource';
 import { data } from './data/resource';
 import { storage } from './storage/resource';
@@ -80,10 +78,14 @@ import { addPasswordProtection } from './functions/add-password-protection/resou
 import { adminQueries } from './functions/AdminQueries2855213c/resource';
 import { validateEmail } from './functions/validateEMail/resource';
 
+// OpenSearch Function
+import { openSearchSync } from './functions/opensearch-sync/resource';
+
 const backend = defineBackend({
   auth,
   data,
   storage,
+  openSearchSync,
   // Email and Notification Functions
   sendEMail,
   sendAlarm,
@@ -181,23 +183,12 @@ const openSearchDomain = new opensearch.Domain(dataStack, 'PowersightSearchDomai
   removalPolicy: environment === 'prod' ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
 });
 
-// Create OpenSearch Sync Lambda Function using CDK directly
-const openSearchSyncLambda = new NodejsFunction(dataStack, 'OpenSearchSyncFunction', {
-  functionName: `opensearch-sync-${environment}`,
-  entry: './amplify/functions/opensearch-sync/handler.ts',
-  runtime: lambda.Runtime.NODEJS_22_X,
-  timeout: Duration.seconds(60),
-  memorySize: 512,
-  environment: {
-    OPENSEARCH_ENDPOINT: openSearchDomain.domainEndpoint,
-    AWS_REGION: dataStack.region,
-  },
-  depsLockFilePath: './amplify/functions/opensearch-sync/package-lock.json',
-  bundling: {
-    minify: false,
-    sourceMap: true,
-  },
-});
+// Get the OpenSearch sync Lambda from the backend
+const openSearchSyncLambda = backend.openSearchSync.resources.lambda;
+
+// Add environment variables
+openSearchSyncLambda.addEnvironment('OPENSEARCH_ENDPOINT', openSearchDomain.domainEndpoint);
+openSearchSyncLambda.addEnvironment('AWS_REGION', dataStack.region);
 
 // Grant OpenSearch sync Lambda permissions to write to OpenSearch
 openSearchDomain.grantReadWrite(openSearchSyncLambda);
