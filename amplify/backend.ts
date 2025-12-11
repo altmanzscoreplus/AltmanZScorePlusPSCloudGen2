@@ -80,14 +80,10 @@ import { addPasswordProtection } from './functions/add-password-protection/resou
 import { adminQueries } from './functions/AdminQueries2855213c/resource';
 import { validateEmail } from './functions/validateEMail/resource';
 
-// OpenSearch Function
-import { openSearchSync } from './functions/opensearch-sync/resource';
-
 const backend = defineBackend({
   auth,
   data,
   storage,
-  openSearchSync,
   // Email and Notification Functions
   sendEMail,
   sendAlarm,
@@ -202,17 +198,31 @@ const openSearchLayer = new lambda.LayerVersion(dataStack, 'OpenSearchLayer', {
   description: 'OpenSearch client and AWS SDK dependencies',
 });
 
-// Get the OpenSearch sync Lambda from the backend
-const openSearchSyncLambda = backend.openSearchSync.resources.lambda;
-
-// Add the layer to the Lambda
-const lambdaFunction = openSearchSyncLambda.node.defaultChild as lambda.CfnFunction;
-lambdaFunction.layers = lambdaFunction.layers || [];
-lambdaFunction.layers.push(openSearchLayer.layerVersionArn);
-
-// Add environment variables using CDK's Function construct
-lambdaFunction.addPropertyOverride('Environment.Variables.OPENSEARCH_ENDPOINT', openSearchDomain.domainEndpoint);
-lambdaFunction.addPropertyOverride('Environment.Variables.AWS_REGION', dataStack.region);
+// Create OpenSearch sync Lambda function directly with CDK
+const openSearchSyncLambda = new lambda.Function(dataStack, 'OpenSearchSyncFunction', {
+  functionName: `opensearch-sync-${environment}`,
+  runtime: lambda.Runtime.NODEJS_22_X,
+  handler: 'index.handler',
+  code: Code.fromAsset('./amplify/functions/opensearch-sync', {
+    bundling: {
+      image: lambda.Runtime.NODEJS_22_X.bundlingImage,
+      command: [
+        'bash', '-c',
+        'cp -r /asset-input/* /asset-output/ && ' +
+        'cd /asset-output && ' +
+        'npm install -g esbuild@0.19.0 && ' +
+        'esbuild handler.ts --bundle --platform=node --target=node22 --outfile=index.js --external:@opensearch-project/opensearch --external:@aws-sdk/credential-provider-node'
+      ],
+    },
+  }),
+  timeout: Duration.seconds(60),
+  memorySize: 512,
+  layers: [openSearchLayer],
+  environment: {
+    OPENSEARCH_ENDPOINT: openSearchDomain.domainEndpoint,
+    AWS_REGION: dataStack.region,
+  },
+});
 
 // Grant OpenSearch sync Lambda permissions to write to OpenSearch
 openSearchDomain.grantReadWrite(openSearchSyncLambda);
