@@ -186,9 +186,10 @@ const openSearchDomain = new opensearch.Domain(dataStack, 'PowersightSearchDomai
 // Get the OpenSearch sync Lambda from the backend
 const openSearchSyncLambda = backend.openSearchSync.resources.lambda;
 
-// Add environment variables
-openSearchSyncLambda.addEnvironment('OPENSEARCH_ENDPOINT', openSearchDomain.domainEndpoint);
-openSearchSyncLambda.addEnvironment('AWS_REGION', dataStack.region);
+// Add environment variables using CDK's Function construct
+const lambdaFunction = openSearchSyncLambda.node.defaultChild as any;
+lambdaFunction.addPropertyOverride('Environment.Variables.OPENSEARCH_ENDPOINT', openSearchDomain.domainEndpoint);
+lambdaFunction.addPropertyOverride('Environment.Variables.AWS_REGION', dataStack.region);
 
 // Grant OpenSearch sync Lambda permissions to write to OpenSearch
 openSearchDomain.grantReadWrite(openSearchSyncLambda);

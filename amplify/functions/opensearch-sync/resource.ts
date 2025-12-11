@@ -7,7 +7,6 @@ export const openSearchSync = defineFunction({
   timeoutSeconds: 60,
   memoryMB: 512,
   bundling: {
-    externalModules: [],
     nodeModules: ['@opensearch-project/opensearch', '@aws-sdk/credential-provider-node'],
   },
 });
