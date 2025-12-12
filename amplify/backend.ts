@@ -215,6 +215,9 @@ queryLambdaFunction.addPropertyOverride('Environment.Variables.OPENSEARCH_ENDPOI
 // Grant read permissions to OpenSearch
 openSearchDomain.grantRead(openSearchQueryLambda);
 
+// Connect custom search resolvers to the OpenSearch query Lambda
+backend.data.addLambdaDataSource('openSearchQueryDataSource', openSearchQueryLambda);
+
 // ============================================================================
 // Connect DynamoDB Streams to OpenSearch Sync Lambda
 // ============================================================================
