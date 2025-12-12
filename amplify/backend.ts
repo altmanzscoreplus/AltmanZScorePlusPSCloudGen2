@@ -138,7 +138,7 @@ const openSearchDomain = new opensearch.Domain(dataStack, 'PowersightSearchDomai
 
   // Cluster configuration
   capacity: {
-    dataNodes: 2,
+    dataNodes: 1,
     dataNodeInstanceType: 't3.small.search',
     masterNodes: 0, // For small clusters, master nodes are not needed
   },
@@ -214,38 +214,6 @@ queryLambdaFunction.addPropertyOverride('Environment.Variables.OPENSEARCH_ENDPOI
 
 // Grant read permissions to OpenSearch
 openSearchDomain.grantRead(openSearchQueryLambda);
-
-// Add the OpenSearch query function as a data source for AppSync
-backend.data.addLambdaDataSource('OpenSearchQueryDataSource', openSearchQueryLambda);
-
-// Connect custom resolvers to the Lambda data source
-backend.data.resources.graphqlApi.addResolver('searchCustomersResolver', {
-  typeName: 'Query',
-  fieldName: 'searchCustomers',
-  dataSourceName: 'OpenSearchQueryDataSource',
-  code: lambda.Code.fromAsset('./amplify/data/searchCustomers.js'),
-});
-
-backend.data.resources.graphqlApi.addResolver('searchContactsResolver', {
-  typeName: 'Query',
-  fieldName: 'searchContacts',
-  dataSourceName: 'OpenSearchQueryDataSource',
-  code: lambda.Code.fromAsset('./amplify/data/searchContacts.js'),
-});
-
-backend.data.resources.graphqlApi.addResolver('searchGatewaysResolver', {
-  typeName: 'Query',
-  fieldName: 'searchGateways',
-  dataSourceName: 'OpenSearchQueryDataSource',
-  code: lambda.Code.fromAsset('./amplify/data/searchGateways.js'),
-});
-
-backend.data.resources.graphqlApi.addResolver('searchAnalyzersResolver', {
-  typeName: 'Query',
-  fieldName: 'searchAnalyzers',
-  dataSourceName: 'OpenSearchQueryDataSource',
-  code: lambda.Code.fromAsset('./amplify/data/searchAnalyzers.js'),
-});
 
 // ============================================================================
 // Connect DynamoDB Streams to OpenSearch Sync Lambda

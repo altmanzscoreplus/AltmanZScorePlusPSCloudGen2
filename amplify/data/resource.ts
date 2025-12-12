@@ -1,4 +1,5 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
+import { openSearchQuery } from '../functions/opensearch-query/resource';
 
 const schema = a.schema({
   // Enums
@@ -641,7 +642,7 @@ Events: a
       nextToken: a.string(),
     })
     .returns(a.ref('SearchResult'))
-    .handler(a.handler.custom({ entry: './searchCustomers.js' }))
+    .handler(a.handler.function(openSearchQuery))
     .authorization((allow) => [
       allow.authenticated()
     ]),
@@ -654,7 +655,7 @@ Events: a
       nextToken: a.string(),
     })
     .returns(a.ref('SearchResult'))
-    .handler(a.handler.custom({ entry: './searchContacts.js' }))
+    .handler(a.handler.function(openSearchQuery))
     .authorization((allow) => [
       allow.authenticated()
     ]),
@@ -667,7 +668,7 @@ Events: a
       nextToken: a.string(),
     })
     .returns(a.ref('SearchResult'))
-    .handler(a.handler.custom({ entry: './searchGateways.js' }))
+    .handler(a.handler.function(openSearchQuery))
     .authorization((allow) => [
       allow.authenticated()
     ]),
@@ -680,7 +681,7 @@ Events: a
       nextToken: a.string(),
     })
     .returns(a.ref('SearchResult'))
-    .handler(a.handler.custom({ entry: './searchAnalyzers.js' }))
+    .handler(a.handler.function(openSearchQuery))
     .authorization((allow) => [
       allow.authenticated()
     ]),
