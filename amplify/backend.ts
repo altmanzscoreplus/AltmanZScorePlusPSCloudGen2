@@ -191,7 +191,6 @@ const openSearchSyncLambda = new lambda.Function(dataStack, 'OpenSearchSyncFunct
   memorySize: 512,
   environment: {
     OPENSEARCH_ENDPOINT: openSearchDomain.domainEndpoint,
-    AWS_REGION: dataStack.region,
   },
 });
 
