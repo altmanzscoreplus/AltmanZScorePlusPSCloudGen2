@@ -13,7 +13,6 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
-import { Code } from 'aws-cdk-lib/aws-lambda';
 import { auth } from './auth/resource';
 import { data } from './data/resource';
 import { storage } from './storage/resource';
@@ -181,43 +180,15 @@ const openSearchDomain = new opensearch.Domain(dataStack, 'PowersightSearchDomai
   removalPolicy: environment === 'prod' ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
 });
 
-// Create Lambda Layer for OpenSearch dependencies
-const openSearchLayer = new lambda.LayerVersion(dataStack, 'OpenSearchLayer', {
-  code: Code.fromAsset('./amplify/functions/opensearch-sync', {
-    bundling: {
-      image: lambda.Runtime.NODEJS_22_X.bundlingImage,
-      command: [
-        'bash', '-c',
-        'mkdir -p /asset-output/nodejs && ' +
-        'cd /asset-input && ' +
-        'npm install --production --prefix /asset-output/nodejs @opensearch-project/opensearch@2.13.0 @aws-sdk/credential-provider-node@3.943.0'
-      ],
-    },
-  }),
-  compatibleRuntimes: [lambda.Runtime.NODEJS_22_X],
-  description: 'OpenSearch client and AWS SDK dependencies',
-});
-
 // Create OpenSearch sync Lambda function directly with CDK
+// Using AssetCode with node_modules included (no Docker bundling needed)
 const openSearchSyncLambda = new lambda.Function(dataStack, 'OpenSearchSyncFunction', {
   functionName: `opensearch-sync-${environment}`,
   runtime: lambda.Runtime.NODEJS_22_X,
-  handler: 'index.handler',
-  code: Code.fromAsset('./amplify/functions/opensearch-sync', {
-    bundling: {
-      image: lambda.Runtime.NODEJS_22_X.bundlingImage,
-      command: [
-        'bash', '-c',
-        'cp -r /asset-input/* /asset-output/ && ' +
-        'cd /asset-output && ' +
-        'npm install -g esbuild@0.19.0 && ' +
-        'esbuild handler.ts --bundle --platform=node --target=node22 --outfile=index.js --external:@opensearch-project/opensearch --external:@aws-sdk/credential-provider-node'
-      ],
-    },
-  }),
+  handler: 'handler.handler',
+  code: lambda.Code.fromAsset('./amplify/functions/opensearch-sync'),
   timeout: Duration.seconds(60),
   memorySize: 512,
-  layers: [openSearchLayer],
   environment: {
     OPENSEARCH_ENDPOINT: openSearchDomain.domainEndpoint,
     AWS_REGION: dataStack.region,
