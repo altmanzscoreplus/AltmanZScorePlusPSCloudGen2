@@ -1,0 +1,15 @@
+{
+  "name": "opensearch-query",
+  "version": "1.0.0",
+  "description": "Lambda function to query OpenSearch",
+  "main": "handler.ts",
+  "dependencies": {
+    "@aws-sdk/credential-provider-node": "^3.943.0",
+    "@opensearch-project/opensearch": "^2.13.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.136",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3"
+  }
+}

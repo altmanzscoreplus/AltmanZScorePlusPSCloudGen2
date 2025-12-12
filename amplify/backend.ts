@@ -79,10 +79,14 @@ import { addPasswordProtection } from './functions/add-password-protection/resou
 import { adminQueries } from './functions/AdminQueries2855213c/resource';
 import { validateEmail } from './functions/validateEMail/resource';
 
+// OpenSearch Query Function
+import { openSearchQuery } from './functions/opensearch-query/resource';
+
 const backend = defineBackend({
   auth,
   data,
   storage,
+  openSearchQuery,
   // Email and Notification Functions
   sendEMail,
   sendAlarm,
@@ -196,6 +200,52 @@ const openSearchSyncLambda = new lambda.Function(dataStack, 'OpenSearchSyncFunct
 
 // Grant OpenSearch sync Lambda permissions to write to OpenSearch
 openSearchDomain.grantReadWrite(openSearchSyncLambda);
+
+// ============================================================================
+// OpenSearch Query Lambda Configuration
+// ============================================================================
+
+// Get the OpenSearch query Lambda function
+const openSearchQueryLambda = backend.openSearchQuery.resources.lambda;
+
+// Add OpenSearch endpoint as environment variable
+const queryLambdaFunction = openSearchQueryLambda.node.defaultChild as any;
+queryLambdaFunction.addPropertyOverride('Environment.Variables.OPENSEARCH_ENDPOINT', openSearchDomain.domainEndpoint);
+
+// Grant read permissions to OpenSearch
+openSearchDomain.grantRead(openSearchQueryLambda);
+
+// Add the OpenSearch query function as a data source for AppSync
+backend.data.addLambdaDataSource('OpenSearchQueryDataSource', openSearchQueryLambda);
+
+// Connect custom resolvers to the Lambda data source
+backend.data.resources.graphqlApi.addResolver('searchCustomersResolver', {
+  typeName: 'Query',
+  fieldName: 'searchCustomers',
+  dataSourceName: 'OpenSearchQueryDataSource',
+  code: lambda.Code.fromAsset('./amplify/data/searchCustomers.js'),
+});
+
+backend.data.resources.graphqlApi.addResolver('searchContactsResolver', {
+  typeName: 'Query',
+  fieldName: 'searchContacts',
+  dataSourceName: 'OpenSearchQueryDataSource',
+  code: lambda.Code.fromAsset('./amplify/data/searchContacts.js'),
+});
+
+backend.data.resources.graphqlApi.addResolver('searchGatewaysResolver', {
+  typeName: 'Query',
+  fieldName: 'searchGateways',
+  dataSourceName: 'OpenSearchQueryDataSource',
+  code: lambda.Code.fromAsset('./amplify/data/searchGateways.js'),
+});
+
+backend.data.resources.graphqlApi.addResolver('searchAnalyzersResolver', {
+  typeName: 'Query',
+  fieldName: 'searchAnalyzers',
+  dataSourceName: 'OpenSearchQueryDataSource',
+  code: lambda.Code.fromAsset('./amplify/data/searchAnalyzers.js'),
+});
 
 // ============================================================================
 // Connect DynamoDB Streams to OpenSearch Sync Lambda
